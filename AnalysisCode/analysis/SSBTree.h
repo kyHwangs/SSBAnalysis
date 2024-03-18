@@ -25,716 +25,784 @@ using namespace std;
 
 class SSBTree {
 public :
-   TTree          *fChain;   //!pointer to the analyzed TTree or TChain
-   Int_t           fCurrent; //!current Tree number in a TChain
+  TTree          *fChain;   //!pointer to the analyzed TTree or TChain
+  Int_t           fCurrent; //!current Tree number in a TChain
 
-// Fixed size dimensions of array or collections stored in the TTree if any.
+  // Fixed size dimensions of array or collections stored in the TTree if any.
 
-   // Declaration of leaf types
-   Int_t           Info_EventNumber;
-   Int_t           Info_Luminosity;
-   Int_t           Info_RunNumber;
-   Char_t          Info_isData;
-   Int_t           Channel_Idx;
-   Int_t           Channel_Idx_Final;
-   Int_t           Channel_Lepton_Count;
-   Int_t           Channel_Lepton_Count_Final;
-   Int_t           Channel_Jets;
-   Int_t           Channel_Jets_Abs;
-   Double_t        L1_PreFire_Central;
-   Double_t        L1_PreFire_Up;
-   Double_t        L1_PreFire_Down;
-   vector<string>  *METFilter_Name;
-   vector<bool>    *METFilter_isError;
-   vector<bool>    *METFilter_isPass;
-   vector<bool>    *METFilter_isRun;
-   vector<string>  *METFilterAdd_Name;
-   vector<bool>    *METFilterAdd_isPass;
-   TClonesArray    *Elec;
-   vector<int>     *Elec_Charge;
-   vector<bool>    *Elec_ChargeId_GsfCtf;
-   vector<bool>    *Elec_ChargeId_GsfCtfPx;
-   vector<bool>    *Elec_ChargeId_GsfPx;
-   vector<double>  *Elec_Charge_CtfTr;
-   vector<double>  *Elec_Charge_GsfTr;
-   vector<double>  *Elec_Charge_Px;
-   vector<bool>    *Elec_Conversion;
-   Int_t           Elec_Count;
-   vector<int>     *Elec_Id_Loose;
-   vector<int>     *Elec_Id_RobustHighEnergy;
-   vector<int>     *Elec_Id_RobustLoose;
-   vector<int>     *Elec_Id_RobustTight;
-   vector<int>     *Elec_Id_Tight;
-   vector<int>     *Elec_Inner_Hit;
-   vector<bool>    *Elec_MVA_Medium;
-   vector<bool>    *Elec_MVA_Tight;
-   vector<bool>    *Elec_MVA_HZZ;
-   vector<float>   *Elec_MVA_Values;
-   vector<int>     *Elec_MVA_Categories;
-   vector<float>   *Elec_MVA_HZZ_Values;
-   vector<int>     *Elec_MVA_HZZ_Categories;
-   vector<double>  *Elec_PFIsoRho03;
-   vector<double>  *Elec_PFIsoRho04;
-   vector<bool>    *Elec_PFIsoValid;
-   vector<double>  *Elec_PFIsodBeta03;
-   vector<double>  *Elec_PFIsodBeta04;
-   vector<bool>    *Elec_SCB_Loose;
-   vector<bool>    *Elec_SCB_Medium;
-   vector<bool>    *Elec_SCB_Tight;
-   vector<bool>    *Elec_SCB_Veto;
-   vector<float>   *Elec_SCB_dEtaIn;
-   vector<float>   *Elec_SCB_dPhiIn;
-   vector<float>   *Elec_SCB_hOverE;
-   vector<bool>    *Elec_SCB_HEEP;
-   vector<float>   *Elec_SCB_ooEmooP;
-   vector<float>   *Elec_SCB_sigmaIetaIeta;
-   vector<double>  *Elec_ScaleUp;
-   vector<double>  *Elec_ScaleDown;
-   vector<double>  *Elec_SigmaUp;
-   vector<double>  *Elec_SigmaDown;
-   vector<double>  *Elec_ScSmUpUp;
-   vector<double>  *Elec_ScSmUpDown;
-   vector<double>  *Elec_ScSmDownUp;
-   vector<double>  *Elec_ScSmDownDown;
-   vector<double>  *Elec_Supercluster_Eta;
-   vector<double>  *Elec_Track_CtfdXY;
-   vector<double>  *Elec_Track_CtfdZ;
-   vector<double>  *Elec_Track_GsfdXY;
-   vector<double>  *Elec_Track_GsfdZ;
-   vector<int>     *Elec_pdgId;
-   vector<double>  *Elec_relIso03;
-   vector<double>  *Elec_relIso04;
-   vector<double>  *Elec_Rnd;
-   Char_t          Filter_Greedy_Muon;
-   Char_t          Filter_Inconsistent_MuonPt;
-   Char_t          Filter_PFReco_Muon;
-   vector<bool>    *Filter_PV;
-   TClonesArray    *GenJet;
-   Int_t           GenJet_Count;
-   vector<float>   *GenJet_ECalEnergy;
-   vector<float>   *GenJet_HCalEnergy;
-   TClonesArray    *GenMET;
-   Int_t           GenMET_Count;
-   TClonesArray    *GenPar;
-   Int_t           GenPar_Count;
-   vector<int>     *GenPar_Dau1_Idx;
-   vector<int>     *GenPar_Dau2_Idx;
-   vector<int>     *GenPar_Dau_Counter;
-   vector<int>     *GenPar_Idx;
-   vector<int>     *GenPar_Mom1_Idx;
-   vector<int>     *GenPar_Mom2_Idx;
-   vector<int>     *GenPar_Mom_Counter;
-   vector<int>     *GenPar_Status;
-   vector<int>     *GenPar_pdgId;
-   Double_t        Gen_EventWeight;
-   TClonesArray    *GenTop;
-   TClonesArray    *GenAnTop;
-   TClonesArray    *GenBJet;
-   Int_t           GenBJet_Count;
-   TClonesArray    *GenBHad;
-   Int_t           GenBHad_Count;
-   vector<int>     *GenBHad_pdgId;
-   vector<int>     *GenBHad_Flavour;
-   vector<int>     *GenBHad_FromTopWeakDecay;
-   TClonesArray    *Jet;
-   vector<int>     *Jet_Charge;
-   Int_t           Jet_Count;
-   vector<double>  *Jet_EnShiftedDown;
-   vector<double>  *Jet_EnShiftedUp;
-   vector<int>     *Jet_PartonFlavour;
-   vector<int>     *Jet_HadronFlavour;
-   vector<int>     *Jet_PFId;
-   vector<int>     *Jet_PFIdVeto;
-   vector<float>   *Jet_PhiResolution_MC;
-   vector<float>   *Jet_PhiResolution_DATA;
-   vector<double>  *Jet_EnergyResolution_MC;
-   vector<double>  *Jet_EnergyResolution_DATA;
-   vector<double>  *Jet_EnergyResolution_SF;
-   vector<double>  *Jet_EnergyResolution_SFDown;
-   vector<double>  *Jet_EnergyResolution_SFUp;
-   vector<int>     *Jet_PileUpId;
-   vector<float>   *Jet_PileUpMVA;
-   vector<float>   *Jet_bDisc;
-   vector<float>   *Jet_bDisc_pfCombinedInclusiveSecondaryVertexV2BJetTags;
-   vector<float>   *Jet_bDisc_softPFMuonBJetTags;
-   vector<float>   *Jet_bDisc_softPFMuonByIP3dBJetTags;
-   vector<float>   *Jet_bDisc_softPFElectronByPtBJetTags;
-   vector<float>   *Jet_bDisc_softPFElectronBJetTags;
-   vector<float>   *Jet_bDisc_softPFMuonByPtBJetTags;
-   vector<float>   *Jet_bDisc_softPFElectronByIP3dBJetTags;
-   vector<float>   *Jet_bDisc_softPFMuonByIP2dBJetTags;
-   vector<float>   *Jet_bDisc_softPFElectronByIP2dBJetTags;
-   vector<bool>    *Jet_isJet;
-   Double_t        LHE_Central;
-   vector<int>     *LHE_Id;
-   vector<double>  *LHE_Weight;
-   Double_t        Frag_Cen_Weight;
-   Double_t        Frag_Up_Weight;
-   Double_t        Frag_Down_Weight;
-   Double_t        Frag_Peterson_Weight;
-   Double_t        Semilep_BrUp_Weight;
-   Double_t        Semilep_BrDown_Weight;
-   TClonesArray    *MET;
-   Double_t        MET_Significance;
-   vector<double>  *MET_JetEnShiftedUp_PT;
-   vector<double>  *MET_JetEnShiftedUp_Phi;
-   vector<double>  *MET_JetEnShiftedDown_PT;
-   vector<double>  *MET_JetEnShiftedDown_Phi;
-   vector<double>  *MET_MuonEnShiftedUp_PT;
-   vector<double>  *MET_MuonEnShiftedUp_Phi;
-   vector<double>  *MET_MuonEnShiftedDown_PT;
-   vector<double>  *MET_MuonEnShiftedDown_Phi;
-   vector<double>  *MET_ElectronEnShiftedUp_PT;
-   vector<double>  *MET_ElectronEnShiftedUp_Phi;
-   vector<double>  *MET_ElectronEnShiftedDown_PT;
-   vector<double>  *MET_ElectronEnShiftedDown_Phi;
-   vector<double>  *MET_UnclusteredEnShiftedUp_PT;
-   vector<double>  *MET_UnclusteredEnShiftedUp_Phi;
-   vector<double>  *MET_UnclusteredEnShiftedDown_PT;
-   vector<double>  *MET_UnclusteredEnShiftedDown_Phi;
-   vector<double>  *MET_JetResShiftedUp_PT;
-   vector<double>  *MET_JetResShiftedUp_Phi;
-   vector<double>  *MET_JetResShiftedDown_PT;
-   vector<double>  *MET_JetResShiftedDown_Phi;
-   TClonesArray    *METEGClean;
-   Double_t        METEGClean_Significance;
-   vector<double>  *METEGClean_JetEnShiftedUp_PT;
-   vector<double>  *METEGClean_JetEnShiftedUp_Phi;
-   vector<double>  *METEGClean_JetEnShiftedDown_PT;
-   vector<double>  *METEGClean_JetEnShiftedDown_Phi;
-   vector<double>  *METEGClean_MuonEnShiftedUp_PT;
-   vector<double>  *METEGClean_MuonEnShiftedUp_Phi;
-   vector<double>  *METEGClean_MuonEnShiftedDown_PT;
-   vector<double>  *METEGClean_MuonEnShiftedDown_Phi;
-   vector<double>  *METEGClean_ElectronEnShiftedUp_PT;
-   vector<double>  *METEGClean_ElectronEnShiftedUp_Phi;
-   vector<double>  *METEGClean_ElectronEnShiftedDown_PT;
-   vector<double>  *METEGClean_ElectronEnShiftedDown_Phi;
-   vector<double>  *METEGClean_UnclusteredEnShiftedUp_PT;
-   vector<double>  *METEGClean_UnclusteredEnShiftedUp_Phi;
-   vector<double>  *METEGClean_UnclusteredEnShiftedDown_PT;
-   vector<double>  *METEGClean_UnclusteredEnShiftedDown_Phi;
-   vector<double>  *METEGClean_JetResShiftedUp_PT;
-   vector<double>  *METEGClean_JetResShiftedUp_Phi;
-   vector<double>  *METEGClean_JetResShiftedDown_PT;
-   vector<double>  *METEGClean_JetResShiftedDown_Phi;
-   TClonesArray    *METMUEGClean;
-   Double_t        METMUEGClean_Significance;
-   vector<double>  *METMUEGClean_JetEnShiftedUp_PT;
-   vector<double>  *METMUEGClean_JetEnShiftedUp_Phi;
-   vector<double>  *METMUEGClean_JetEnShiftedDown_PT;
-   vector<double>  *METMUEGClean_JetEnShiftedDown_Phi;
-   vector<double>  *METMUEGClean_MuonEnShiftedUp_PT;
-   vector<double>  *METMUEGClean_MuonEnShiftedUp_Phi;
-   vector<double>  *METMUEGClean_MuonEnShiftedDown_PT;
-   vector<double>  *METMUEGClean_MuonEnShiftedDown_Phi;
-   vector<double>  *METMUEGClean_ElectronEnShiftedUp_PT;
-   vector<double>  *METMUEGClean_ElectronEnShiftedUp_Phi;
-   vector<double>  *METMUEGClean_ElectronEnShiftedDown_PT;
-   vector<double>  *METMUEGClean_ElectronEnShiftedDown_Phi;
-   vector<double>  *METMUEGClean_UnclusteredEnShiftedUp_PT;
-   vector<double>  *METMUEGClean_UnclusteredEnShiftedUp_Phi;
-   vector<double>  *METMUEGClean_UnclusteredEnShiftedDown_PT;
-   vector<double>  *METMUEGClean_UnclusteredEnShiftedDown_Phi;
-   vector<double>  *METMUEGClean_JetResShiftedUp_PT;
-   vector<double>  *METMUEGClean_JetResShiftedUp_Phi;
-   vector<double>  *METMUEGClean_JetResShiftedDown_PT;
-   vector<double>  *METMUEGClean_JetResShiftedDown_Phi;
-   TClonesArray    *METMUEGCleanCor;
-   Double_t        METMUEGCleanCor_Significance;
-   vector<double>  *METMUEGCleanCor_JetEnShiftedUp_PT;
-   vector<double>  *METMUEGCleanCor_JetEnShiftedUp_Phi;
-   vector<double>  *METMUEGCleanCor_JetEnShiftedDown_PT;
-   vector<double>  *METMUEGCleanCor_JetEnShiftedDown_Phi;
-   vector<double>  *METMUEGCleanCor_MuonEnShiftedUp_PT;
-   vector<double>  *METMUEGCleanCor_MuonEnShiftedUp_Phi;
-   vector<double>  *METMUEGCleanCor_MuonEnShiftedDown_PT;
-   vector<double>  *METMUEGCleanCor_MuonEnShiftedDown_Phi;
-   vector<double>  *METMUEGCleanCor_ElectronEnShiftedUp_PT;
-   vector<double>  *METMUEGCleanCor_ElectronEnShiftedUp_Phi;
-   vector<double>  *METMUEGCleanCor_ElectronEnShiftedDown_PT;
-   vector<double>  *METMUEGCleanCor_ElectronEnShiftedDown_Phi;
-   vector<double>  *METMUEGCleanCor_UnclusteredEnShiftedUp_PT;
-   vector<double>  *METMUEGCleanCor_UnclusteredEnShiftedUp_Phi;
-   vector<double>  *METMUEGCleanCor_UnclusteredEnShiftedDown_PT;
-   vector<double>  *METMUEGCleanCor_UnclusteredEnShiftedDown_Phi;
-   vector<double>  *METMUEGCleanCor_JetResShiftedUp_PT;
-   vector<double>  *METMUEGCleanCor_JetResShiftedUp_Phi;
-   vector<double>  *METMUEGCleanCor_JetResShiftedDown_PT;
-   vector<double>  *METMUEGCleanCor_JetResShiftedDown_Phi;
-   TClonesArray    *METMUCleanCor;
-   Double_t        METMUCleanCor_Significance;
-   vector<double>  *METMUCleanCor_JetEnShiftedUp_PT;
-   vector<double>  *METMUCleanCor_JetEnShiftedUp_Phi;
-   vector<double>  *METMUCleanCor_JetEnShiftedDown_PT;
-   vector<double>  *METMUCleanCor_JetEnShiftedDown_Phi;
-   vector<double>  *METMUCleanCor_MuonEnShiftedUp_PT;
-   vector<double>  *METMUCleanCor_MuonEnShiftedUp_Phi;
-   vector<double>  *METMUCleanCor_MuonEnShiftedDown_PT;
-   vector<double>  *METMUCleanCor_MuonEnShiftedDown_Phi;
-   vector<double>  *METMUCleanCor_ElectronEnShiftedUp_PT;
-   vector<double>  *METMUCleanCor_ElectronEnShiftedUp_Phi;
-   vector<double>  *METMUCleanCor_ElectronEnShiftedDown_PT;
-   vector<double>  *METMUCleanCor_ElectronEnShiftedDown_Phi;
-   vector<double>  *METMUCleanCor_UnclusteredEnShiftedUp_PT;
-   vector<double>  *METMUCleanCor_UnclusteredEnShiftedUp_Phi;
-   vector<double>  *METMUCleanCor_UnclusteredEnShiftedDown_PT;
-   vector<double>  *METMUCleanCor_UnclusteredEnShiftedDown_Phi;
-   vector<double>  *METMUCleanCor_JetResShiftedUp_PT;
-   vector<double>  *METMUCleanCor_JetResShiftedUp_Phi;
-   vector<double>  *METMUCleanCor_JetResShiftedDown_PT;
-   vector<double>  *METMUCleanCor_JetResShiftedDown_Phi;
-   TClonesArray    *METUnCor;
-   Double_t        METUnCor_Significance;
-   vector<double>  *METUnCor_JetEnShiftedUp_PT;
-   vector<double>  *METUnCor_JetEnShiftedUp_Phi;
-   vector<double>  *METUnCor_JetEnShiftedDown_PT;
-   vector<double>  *METUnCor_JetEnShiftedDown_Phi;
-   vector<double>  *METUnCor_MuonEnShiftedUp_PT;
-   vector<double>  *METUnCor_MuonEnShiftedUp_Phi;
-   vector<double>  *METUnCor_MuonEnShiftedDown_PT;
-   vector<double>  *METUnCor_MuonEnShiftedDown_Phi;
-   vector<double>  *METUnCor_ElectronEnShiftedUp_PT;
-   vector<double>  *METUnCor_ElectronEnShiftedUp_Phi;
-   vector<double>  *METUnCor_ElectronEnShiftedDown_PT;
-   vector<double>  *METUnCor_ElectronEnShiftedDown_Phi;
-   vector<double>  *METUnCor_UnclusteredEnShiftedUp_PT;
-   vector<double>  *METUnCor_UnclusteredEnShiftedUp_Phi;
-   vector<double>  *METUnCor_UnclusteredEnShiftedDown_PT;
-   vector<double>  *METUnCor_UnclusteredEnShiftedDown_Phi;
-   vector<double>  *METUnCor_JetResShiftedUp_PT;
-   vector<double>  *METUnCor_JetResShiftedUp_Phi;
-   vector<double>  *METUnCor_JetResShiftedDown_PT;
-   vector<double>  *METUnCor_JetResShiftedDown_Phi;
-   TClonesArray    *Muon;
-   TClonesArray    *GenMuon;
-   vector<int>     *Muon_Charge;
-   Int_t           Muon_Count;
-   vector<double>  *Muon_PFIsodBeta03;
-   vector<double>  *Muon_PFIsodBeta04;
-   vector<bool>    *Muon_isHighPt;
-   vector<bool>    *Muon_isLoose;
-   vector<bool>    *Muon_isMedium;
-   vector<bool>    *Muon_isMedium2016;
-   vector<bool>    *Muon_isSoft;
-   vector<bool>    *Muon_isTight;
-   vector<int>     *Muon_pdgId;
-   vector<double>  *Muon_rand1;
-   vector<double>  *Muon_rand2;
-   vector<double>  *Muon_relIso03;
-   vector<double>  *Muon_relIso04;
-   vector<int>     *Muon_trackerLayers;
-   vector<double>  *PDFWeight_BjorkenX1;
-   vector<double>  *PDFWeight_BjorkenX2;
-   vector<double>  *PDFWeight_Cent;
-   vector<double>  *PDFWeight_Cent_Down;
-   vector<double>  *PDFWeight_Cent_Up;
-   vector<int>     *PDFWeight_Id1;
-   vector<int>     *PDFWeight_Id2;
-   vector<double>  *PDFWeight_PDF1;
-   vector<double>  *PDFWeight_PDF2;
-   vector<double>  *PDFWeight_Q;
-   vector<double>  *PDFWeight_Var1_Down;
-   vector<double>  *PDFWeight_Var1_Up;
-   vector<double>  *PDFWeight_Var2_Down;
-   vector<double>  *PDFWeight_Var2_Up;
-   TClonesArray    *Photon;
-   Int_t           Photon_Count;
-   vector<bool>    *Photon_SCB_Loose;
-   vector<bool>    *Photon_SCB_Medium;
-   vector<bool>    *Photon_SCB_Tight;
-   vector<float>   *Photon_ChaHadIso;
-   vector<float>   *Photon_NeuHadIso;
-   vector<float>   *Photon_PhoIso;
-   vector<float>   *Photon_WorstChargedIso;
-   vector<float>   *Photon_ChaHadEffArea;
-   vector<float>   *Photon_NeuHadEffArea;
-   vector<float>   *Photon_PhoHadEffArea;
-   vector<double>  *Photon_R9;
-   vector<double>  *Photon_HoverE;
-   vector<double>  *Photon_SuperCluster_Eta;
-   vector<double>  *Photon_SuperCluster_Phi;
-   vector<double>  *Photon_SuperCluster_EtaWidth;
-   vector<double>  *Photon_SuperCluster_PhiWidth;
-   vector<double>  *Photon_SuperCluster_Energy;
-   vector<double>  *Photon_SuperCluster_RawEnergy;
-   vector<bool>    *Photon_ElectronVeto;
-   vector<double>  *Photon_Full5x5_SigmaIetaIeta;
-   vector<bool>    *Photon_MVANonTrig_Tight;
-   Int_t           PV_Count;
-   Int_t           PileUp_Count_Interaction;
-   Float_t         PileUp_Count_Intime;
-   vector<double>  *Rho;
-   vector<string>  *Trigger_Name;
-   vector<unsigned int> *Trigger_PreScale;
-   vector<bool>    *Trigger_isError;
-   vector<bool>    *Trigger_isPass;
-   vector<bool>    *Trigger_isRun;
-   vector<double>  *Vertex_SumPtSquare;
-   vector<double>  *Vertex_X;
-   vector<double>  *Vertex_X_Error;
-   vector<double>  *Vertex_Y;
-   vector<double>  *Vertex_Y_Error;
-   vector<double>  *Vertex_Z;
-   vector<double>  *Vertex_Z_Error;
+  // Declaration of leaf types
+  Int_t           Info_EventNumber;
+  Int_t           Info_Luminosity;
+  Int_t           Info_RunNumber;
+  Char_t          Info_isData;
+  Int_t           Channel_Idx;
+  Int_t           Channel_Idx_Final;
+  Int_t           Channel_Lepton_Count;
+  Int_t           Channel_Lepton_Count_Final;
+  Int_t           Channel_Jets;
+  Int_t           Channel_Jets_Abs;
+  Double_t        L1_PreFire_Central;
+  Double_t        L1_PreFire_Up;
+  Double_t        L1_PreFire_Down;
+  vector<string>  *METFilter_Name;
+  vector<bool>    *METFilter_isError;
+  vector<bool>    *METFilter_isPass;
+  vector<bool>    *METFilter_isRun;
+  vector<string>  *METFilterAdd_Name;
+  vector<bool>    *METFilterAdd_isPass;
+  TClonesArray    *Elec;
+  vector<int>     *Elec_Charge;
+  vector<bool>    *Elec_ChargeId_GsfCtf;
+  vector<bool>    *Elec_ChargeId_GsfCtfPx;
+  vector<bool>    *Elec_ChargeId_GsfPx;
+  vector<double>  *Elec_Charge_CtfTr;
+  vector<double>  *Elec_Charge_GsfTr;
+  vector<double>  *Elec_Charge_Px;
+  vector<bool>    *Elec_Conversion;
+  Int_t           Elec_Count;
+  vector<int>     *Elec_Id_Loose;
+  vector<int>     *Elec_Id_RobustHighEnergy;
+  vector<int>     *Elec_Id_RobustLoose;
+  vector<int>     *Elec_Id_RobustTight;
+  vector<int>     *Elec_Id_Tight;
+  vector<int>     *Elec_Inner_Hit;
+  vector<bool>    *Elec_MVA_Medium;
+  vector<bool>    *Elec_MVA_Tight;
+  vector<bool>    *Elec_MVA_HZZ;
+  vector<float>   *Elec_MVA_Values;
+  vector<int>     *Elec_MVA_Categories;
+  vector<float>   *Elec_MVA_HZZ_Values;
+  vector<int>     *Elec_MVA_HZZ_Categories;
+  vector<double>  *Elec_PFIsoRho03;
+  vector<double>  *Elec_PFIsoRho04;
+  vector<bool>    *Elec_PFIsoValid;
+  vector<double>  *Elec_PFIsodBeta03;
+  vector<double>  *Elec_PFIsodBeta04;
+  vector<bool>    *Elec_SCB_Loose;
+  vector<bool>    *Elec_SCB_Medium;
+  vector<bool>    *Elec_SCB_Tight;
+  vector<bool>    *Elec_SCB_Veto;
+  vector<float>   *Elec_SCB_dEtaIn;
+  vector<float>   *Elec_SCB_dPhiIn;
+  vector<float>   *Elec_SCB_hOverE;
+  vector<bool>    *Elec_SCB_HEEP;
+  vector<float>   *Elec_SCB_ooEmooP;
+  vector<float>   *Elec_SCB_sigmaIetaIeta;
+  vector<double>  *Elec_ScaleUp;
+  vector<double>  *Elec_ScaleDown;
+  vector<double>  *Elec_SigmaUp;
+  vector<double>  *Elec_SigmaDown;
+  vector<double>  *Elec_ScSmUpUp;
+  vector<double>  *Elec_ScSmUpDown;
+  vector<double>  *Elec_ScSmDownUp;
+  vector<double>  *Elec_ScSmDownDown;
+  vector<double>  *Elec_Supercluster_Eta;
+  vector<double>  *Elec_Track_CtfdXY;
+  vector<double>  *Elec_Track_CtfdZ;
+  vector<double>  *Elec_Track_GsfdXY;
+  vector<double>  *Elec_Track_GsfdZ;
+  vector<int>     *Elec_pdgId;
+  vector<double>  *Elec_relIso03;
+  vector<double>  *Elec_relIso04;
+  vector<double>  *Elec_Rnd;
+  Char_t          Filter_Greedy_Muon;
+  Char_t          Filter_Inconsistent_MuonPt;
+  Char_t          Filter_PFReco_Muon;
+  vector<bool>    *Filter_PV;
+  TClonesArray    *GenJet;
+  Int_t           GenJet_Count;
+  vector<float>   *GenJet_ECalEnergy;
+  vector<float>   *GenJet_HCalEnergy;
+  TClonesArray    *GenMET;
+  Int_t           GenMET_Count;
+  TClonesArray    *GenPar;
+  Int_t           GenPar_Count;
+  vector<int>     *GenPar_Dau1_Idx;
+  vector<int>     *GenPar_Dau2_Idx;
+  vector<int>     *GenPar_Dau_Counter;
+  vector<int>     *GenPar_Idx;
+  vector<int>     *GenPar_Mom1_Idx;
+  vector<int>     *GenPar_Mom2_Idx;
+  vector<int>     *GenPar_Mom_Counter;
+  vector<int>     *GenPar_Status;
+  vector<int>     *GenPar_pdgId;
+  Double_t        Gen_EventWeight;
+  TClonesArray    *GenTop;
+  TClonesArray    *GenAnTop;
+  TClonesArray    *GenBJet;
+  Int_t           GenBJet_Count;
+  TClonesArray    *GenBHad;
+  Int_t           GenBHad_Count;
+  vector<int>     *GenBHad_pdgId;
+  vector<int>     *GenBHad_Flavour;
+  vector<int>     *GenBHad_FromTopWeakDecay;
+  TClonesArray    *Jet;
+  vector<int>     *Jet_Charge;
+  Int_t           Jet_Count;
+  vector<double>  *Jet_EnShiftedDown;
+  vector<double>  *Jet_EnShiftedUp;
+  vector<int>     *Jet_PartonFlavour;
+  vector<int>     *Jet_HadronFlavour;
+  vector<int>     *Jet_PFId;
+  vector<int>     *Jet_PFIdVeto;
+  vector<float>   *Jet_PhiResolution_MC;
+  vector<float>   *Jet_PhiResolution_DATA;
+  vector<double>  *Jet_EnergyResolution_MC;
+  vector<double>  *Jet_EnergyResolution_DATA;
+  vector<double>  *Jet_EnergyResolution_SF;
+  vector<double>  *Jet_EnergyResolution_SFDown;
+  vector<double>  *Jet_EnergyResolution_SFUp;
+  vector<int>     *Jet_PileUpId;
+  vector<float>   *Jet_PileUpMVA;
+  vector<float>   *Jet_bDisc;
+  vector<float>   *Jet_bDisc_pfCombinedInclusiveSecondaryVertexV2BJetTags;
+  vector<float>   *Jet_bDisc_softPFMuonBJetTags;
+  vector<float>   *Jet_bDisc_softPFMuonByIP3dBJetTags;
+  vector<float>   *Jet_bDisc_softPFElectronByPtBJetTags;
+  vector<float>   *Jet_bDisc_softPFElectronBJetTags;
+  vector<float>   *Jet_bDisc_softPFMuonByPtBJetTags;
+  vector<float>   *Jet_bDisc_softPFElectronByIP3dBJetTags;
+  vector<float>   *Jet_bDisc_softPFMuonByIP2dBJetTags;
+  vector<float>   *Jet_bDisc_softPFElectronByIP2dBJetTags;
+  vector<bool>    *Jet_isJet;
+  Double_t        LHE_Central;
+  vector<int>     *LHE_Id;
+  vector<double>  *LHE_Weight;
+  Double_t        Frag_Cen_Weight;
+  Double_t        Frag_Up_Weight;
+  Double_t        Frag_Down_Weight;
+  Double_t        Frag_Peterson_Weight;
+  Double_t        Semilep_BrUp_Weight;
+  Double_t        Semilep_BrDown_Weight;
+  TClonesArray    *MET;
+  Double_t        MET_Significance;
+  vector<double>  *MET_JetEnShiftedUp_PT;
+  vector<double>  *MET_JetEnShiftedUp_Phi;
+  vector<double>  *MET_JetEnShiftedDown_PT;
+  vector<double>  *MET_JetEnShiftedDown_Phi;
+  vector<double>  *MET_MuonEnShiftedUp_PT;
+  vector<double>  *MET_MuonEnShiftedUp_Phi;
+  vector<double>  *MET_MuonEnShiftedDown_PT;
+  vector<double>  *MET_MuonEnShiftedDown_Phi;
+  vector<double>  *MET_ElectronEnShiftedUp_PT;
+  vector<double>  *MET_ElectronEnShiftedUp_Phi;
+  vector<double>  *MET_ElectronEnShiftedDown_PT;
+  vector<double>  *MET_ElectronEnShiftedDown_Phi;
+  vector<double>  *MET_UnclusteredEnShiftedUp_PT;
+  vector<double>  *MET_UnclusteredEnShiftedUp_Phi;
+  vector<double>  *MET_UnclusteredEnShiftedDown_PT;
+  vector<double>  *MET_UnclusteredEnShiftedDown_Phi;
+  vector<double>  *MET_JetResShiftedUp_PT;
+  vector<double>  *MET_JetResShiftedUp_Phi;
+  vector<double>  *MET_JetResShiftedDown_PT;
+  vector<double>  *MET_JetResShiftedDown_Phi;
+  TClonesArray    *METEGClean;
+  Double_t        METEGClean_Significance;
+  vector<double>  *METEGClean_JetEnShiftedUp_PT;
+  vector<double>  *METEGClean_JetEnShiftedUp_Phi;
+  vector<double>  *METEGClean_JetEnShiftedDown_PT;
+  vector<double>  *METEGClean_JetEnShiftedDown_Phi;
+  vector<double>  *METEGClean_MuonEnShiftedUp_PT;
+  vector<double>  *METEGClean_MuonEnShiftedUp_Phi;
+  vector<double>  *METEGClean_MuonEnShiftedDown_PT;
+  vector<double>  *METEGClean_MuonEnShiftedDown_Phi;
+  vector<double>  *METEGClean_ElectronEnShiftedUp_PT;
+  vector<double>  *METEGClean_ElectronEnShiftedUp_Phi;
+  vector<double>  *METEGClean_ElectronEnShiftedDown_PT;
+  vector<double>  *METEGClean_ElectronEnShiftedDown_Phi;
+  vector<double>  *METEGClean_UnclusteredEnShiftedUp_PT;
+  vector<double>  *METEGClean_UnclusteredEnShiftedUp_Phi;
+  vector<double>  *METEGClean_UnclusteredEnShiftedDown_PT;
+  vector<double>  *METEGClean_UnclusteredEnShiftedDown_Phi;
+  vector<double>  *METEGClean_JetResShiftedUp_PT;
+  vector<double>  *METEGClean_JetResShiftedUp_Phi;
+  vector<double>  *METEGClean_JetResShiftedDown_PT;
+  vector<double>  *METEGClean_JetResShiftedDown_Phi;
+  TClonesArray    *METMUEGClean;
+  Double_t        METMUEGClean_Significance;
+  vector<double>  *METMUEGClean_JetEnShiftedUp_PT;
+  vector<double>  *METMUEGClean_JetEnShiftedUp_Phi;
+  vector<double>  *METMUEGClean_JetEnShiftedDown_PT;
+  vector<double>  *METMUEGClean_JetEnShiftedDown_Phi;
+  vector<double>  *METMUEGClean_MuonEnShiftedUp_PT;
+  vector<double>  *METMUEGClean_MuonEnShiftedUp_Phi;
+  vector<double>  *METMUEGClean_MuonEnShiftedDown_PT;
+  vector<double>  *METMUEGClean_MuonEnShiftedDown_Phi;
+  vector<double>  *METMUEGClean_ElectronEnShiftedUp_PT;
+  vector<double>  *METMUEGClean_ElectronEnShiftedUp_Phi;
+  vector<double>  *METMUEGClean_ElectronEnShiftedDown_PT;
+  vector<double>  *METMUEGClean_ElectronEnShiftedDown_Phi;
+  vector<double>  *METMUEGClean_UnclusteredEnShiftedUp_PT;
+  vector<double>  *METMUEGClean_UnclusteredEnShiftedUp_Phi;
+  vector<double>  *METMUEGClean_UnclusteredEnShiftedDown_PT;
+  vector<double>  *METMUEGClean_UnclusteredEnShiftedDown_Phi;
+  vector<double>  *METMUEGClean_JetResShiftedUp_PT;
+  vector<double>  *METMUEGClean_JetResShiftedUp_Phi;
+  vector<double>  *METMUEGClean_JetResShiftedDown_PT;
+  vector<double>  *METMUEGClean_JetResShiftedDown_Phi;
+  TClonesArray    *METMUEGCleanCor;
+  Double_t        METMUEGCleanCor_Significance;
+  vector<double>  *METMUEGCleanCor_JetEnShiftedUp_PT;
+  vector<double>  *METMUEGCleanCor_JetEnShiftedUp_Phi;
+  vector<double>  *METMUEGCleanCor_JetEnShiftedDown_PT;
+  vector<double>  *METMUEGCleanCor_JetEnShiftedDown_Phi;
+  vector<double>  *METMUEGCleanCor_MuonEnShiftedUp_PT;
+  vector<double>  *METMUEGCleanCor_MuonEnShiftedUp_Phi;
+  vector<double>  *METMUEGCleanCor_MuonEnShiftedDown_PT;
+  vector<double>  *METMUEGCleanCor_MuonEnShiftedDown_Phi;
+  vector<double>  *METMUEGCleanCor_ElectronEnShiftedUp_PT;
+  vector<double>  *METMUEGCleanCor_ElectronEnShiftedUp_Phi;
+  vector<double>  *METMUEGCleanCor_ElectronEnShiftedDown_PT;
+  vector<double>  *METMUEGCleanCor_ElectronEnShiftedDown_Phi;
+  vector<double>  *METMUEGCleanCor_UnclusteredEnShiftedUp_PT;
+  vector<double>  *METMUEGCleanCor_UnclusteredEnShiftedUp_Phi;
+  vector<double>  *METMUEGCleanCor_UnclusteredEnShiftedDown_PT;
+  vector<double>  *METMUEGCleanCor_UnclusteredEnShiftedDown_Phi;
+  vector<double>  *METMUEGCleanCor_JetResShiftedUp_PT;
+  vector<double>  *METMUEGCleanCor_JetResShiftedUp_Phi;
+  vector<double>  *METMUEGCleanCor_JetResShiftedDown_PT;
+  vector<double>  *METMUEGCleanCor_JetResShiftedDown_Phi;
+  TClonesArray    *METMUCleanCor;
+  Double_t        METMUCleanCor_Significance;
+  vector<double>  *METMUCleanCor_JetEnShiftedUp_PT;
+  vector<double>  *METMUCleanCor_JetEnShiftedUp_Phi;
+  vector<double>  *METMUCleanCor_JetEnShiftedDown_PT;
+  vector<double>  *METMUCleanCor_JetEnShiftedDown_Phi;
+  vector<double>  *METMUCleanCor_MuonEnShiftedUp_PT;
+  vector<double>  *METMUCleanCor_MuonEnShiftedUp_Phi;
+  vector<double>  *METMUCleanCor_MuonEnShiftedDown_PT;
+  vector<double>  *METMUCleanCor_MuonEnShiftedDown_Phi;
+  vector<double>  *METMUCleanCor_ElectronEnShiftedUp_PT;
+  vector<double>  *METMUCleanCor_ElectronEnShiftedUp_Phi;
+  vector<double>  *METMUCleanCor_ElectronEnShiftedDown_PT;
+  vector<double>  *METMUCleanCor_ElectronEnShiftedDown_Phi;
+  vector<double>  *METMUCleanCor_UnclusteredEnShiftedUp_PT;
+  vector<double>  *METMUCleanCor_UnclusteredEnShiftedUp_Phi;
+  vector<double>  *METMUCleanCor_UnclusteredEnShiftedDown_PT;
+  vector<double>  *METMUCleanCor_UnclusteredEnShiftedDown_Phi;
+  vector<double>  *METMUCleanCor_JetResShiftedUp_PT;
+  vector<double>  *METMUCleanCor_JetResShiftedUp_Phi;
+  vector<double>  *METMUCleanCor_JetResShiftedDown_PT;
+  vector<double>  *METMUCleanCor_JetResShiftedDown_Phi;
+  TClonesArray    *METUnCor;
+  Double_t        METUnCor_Significance;
+  vector<double>  *METUnCor_JetEnShiftedUp_PT;
+  vector<double>  *METUnCor_JetEnShiftedUp_Phi;
+  vector<double>  *METUnCor_JetEnShiftedDown_PT;
+  vector<double>  *METUnCor_JetEnShiftedDown_Phi;
+  vector<double>  *METUnCor_MuonEnShiftedUp_PT;
+  vector<double>  *METUnCor_MuonEnShiftedUp_Phi;
+  vector<double>  *METUnCor_MuonEnShiftedDown_PT;
+  vector<double>  *METUnCor_MuonEnShiftedDown_Phi;
+  vector<double>  *METUnCor_ElectronEnShiftedUp_PT;
+  vector<double>  *METUnCor_ElectronEnShiftedUp_Phi;
+  vector<double>  *METUnCor_ElectronEnShiftedDown_PT;
+  vector<double>  *METUnCor_ElectronEnShiftedDown_Phi;
+  vector<double>  *METUnCor_UnclusteredEnShiftedUp_PT;
+  vector<double>  *METUnCor_UnclusteredEnShiftedUp_Phi;
+  vector<double>  *METUnCor_UnclusteredEnShiftedDown_PT;
+  vector<double>  *METUnCor_UnclusteredEnShiftedDown_Phi;
+  vector<double>  *METUnCor_JetResShiftedUp_PT;
+  vector<double>  *METUnCor_JetResShiftedUp_Phi;
+  vector<double>  *METUnCor_JetResShiftedDown_PT;
+  vector<double>  *METUnCor_JetResShiftedDown_Phi;
 
-   // List of branches
-   TBranch        *b_Info_EventNumber;   //!
-   TBranch        *b_Info_Luminosity;   //!
-   TBranch        *b_Info_RunNumber;   //!
-   TBranch        *b_Info_isData;   //!
-   TBranch        *b_Channel_Idx;   //!
-   TBranch        *b_Channel_Idx_Final;   //!
-   TBranch        *b_Channel_Lepton_Count;   //!
-   TBranch        *b_Channel_Lepton_Count_Final;   //!
-   TBranch        *b_Channel_Jets;   //!
-   TBranch        *b_Channel_Jets_Abs;   //!
-   TBranch        *b_L1_PreFire_Central;   //!
-   TBranch        *b_L1_PreFire_Up;   //!
-   TBranch        *b_L1_PreFire_Down;   //!
-   TBranch        *b_METFilter_Name;   //!
-   TBranch        *b_METFilter_isError;   //!
-   TBranch        *b_METFilter_isPass;   //!
-   TBranch        *b_METFilter_isRun;   //!
-   TBranch        *b_METFilterAdd_Name;   //!
-   TBranch        *b_METFilterAdd_isPass;   //!
-   TBranch        *b_Elec;   //!
-   TBranch        *b_Elec_Charge;   //!
-   TBranch        *b_Elec_ChargeId_GsfCtf;   //!
-   TBranch        *b_Elec_ChargeId_GsfCtfPx;   //!
-   TBranch        *b_Elec_ChargeId_GsfPx;   //!
-   TBranch        *b_Elec_Charge_CtfTr;   //!
-   TBranch        *b_Elec_Charge_GsfTr;   //!
-   TBranch        *b_Elec_Charge_Px;   //!
-   TBranch        *b_Elec_Conversion;   //!
-   TBranch        *b_Elec_Count;   //!
-   TBranch        *b_Elec_Id_Loose;   //!
-   TBranch        *b_Elec_Id_RobustHighEnergy;   //!
-   TBranch        *b_Elec_Id_RobustLoose;   //!
-   TBranch        *b_Elec_Id_RobustTight;   //!
-   TBranch        *b_Elec_Id_Tight;   //!
-   TBranch        *b_Elec_Inner_Hit;   //!
-   TBranch        *b_Elec_MVA_Medium;   //!
-   TBranch        *b_Elec_MVA_Tight;   //!
-   TBranch        *b_Elec_MVA_HZZ;   //!
-   TBranch        *b_Elec_MVA_Values;   //!
-   TBranch        *b_Elec_MVA_Categories;   //!
-   TBranch        *b_Elec_MVA_HZZ_Values;   //!
-   TBranch        *b_Elec_MVA_HZZ_Categories;   //!
-   TBranch        *b_Elec_PFIsoRho03;   //!
-   TBranch        *b_Elec_PFIsoRho04;   //!
-   TBranch        *b_Elec_PFIsoValid;   //!
-   TBranch        *b_Elec_PFIsodBeta03;   //!
-   TBranch        *b_Elec_PFIsodBeta04;   //!
-   TBranch        *b_Elec_SCB_Loose;   //!
-   TBranch        *b_Elec_SCB_Medium;   //!
-   TBranch        *b_Elec_SCB_Tight;   //!
-   TBranch        *b_Elec_SCB_Veto;   //!
-   TBranch        *b_Elec_SCB_dEtaIn;   //!
-   TBranch        *b_Elec_SCB_dPhiIn;   //!
-   TBranch        *b_Elec_SCB_hOverE;   //!
-   TBranch        *b_Elec_SCB_HEEP;   //!
-   TBranch        *b_Elec_SCB_ooEmooP;   //!
-   TBranch        *b_Elec_SCB_sigmaIetaIeta;   //!
-   TBranch        *b_Elec_ScaleUp;   //!
-   TBranch        *b_Elec_ScaleDown;   //!
-   TBranch        *b_Elec_SigmaUp;   //!
-   TBranch        *b_Elec_SigmaDown;   //!
-   TBranch        *b_Elec_ScSmUpUp;   //!
-   TBranch        *b_Elec_ScSmUpDown;   //!
-   TBranch        *b_Elec_ScSmDownUp;   //!
-   TBranch        *b_Elec_ScSmDownDown;   //!
-   TBranch        *b_Elec_Supercluster_Eta;   //!
-   TBranch        *b_Elec_Track_CtfdXY;   //!
-   TBranch        *b_Elec_Track_CtfdZ;   //!
-   TBranch        *b_Elec_Track_GsfdXY;   //!
-   TBranch        *b_Elec_Track_GsfdZ;   //!
-   TBranch        *b_Elec_pdgId;   //!
-   TBranch        *b_Elec_relIso03;   //!
-   TBranch        *b_Elec_relIso04;   //!
-   TBranch        *b_Elec_Rnd;   //!
-   TBranch        *b_Filter_Greedy_Muon;   //!
-   TBranch        *b_Filter_Inconsistent_MuonPt;   //!
-   TBranch        *b_Filter_PFReco_Muon;   //!
-   TBranch        *b_Filter_PV;   //!
-   TBranch        *b_GenJet;   //!
-   TBranch        *b_GenJet_Count;   //!
-   TBranch        *b_GenJet_ECalEnergy;   //!
-   TBranch        *b_GenJet_HCalEnergy;   //!
-   TBranch        *b_GenMET;   //!
-   TBranch        *b_GenMET_Count;   //!
-   TBranch        *b_GenPar;   //!
-   TBranch        *b_GenPar_Count;   //!
-   TBranch        *b_GenPar_Dau1_Idx;   //!
-   TBranch        *b_GenPar_Dau2_Idx;   //!
-   TBranch        *b_GenPar_Dau_Counter;   //!
-   TBranch        *b_GenPar_Idx;   //!
-   TBranch        *b_GenPar_Mom1_Idx;   //!
-   TBranch        *b_GenPar_Mom2_Idx;   //!
-   TBranch        *b_GenPar_Mom_Counter;   //!
-   TBranch        *b_GenPar_Status;   //!
-   TBranch        *b_GenPar_pdgId;   //!
-   TBranch        *b_Gen_EventWeight;   //!
-   TBranch        *b_GenTop;   //!
-   TBranch        *b_GenAnTop;   //!
-   TBranch        *b_GenBJet;   //!
-   TBranch        *b_GenBJet_Count;   //!
-   TBranch        *b_GenBHad;   //!
-   TBranch        *b_GenBHad_Count;   //!
-   TBranch        *b_GenBHad_pdgId;   //!
-   TBranch        *b_GenBHad_Flavour;   //!
-   TBranch        *b_GenBHad_FromTopWeakDecay;   //!
-   TBranch        *b_Jet;   //!
-   TBranch        *b_Jet_Charge;   //!
-   TBranch        *b_Jet_Count;   //!
-   TBranch        *b_Jet_EnShiftedDown;   //!
-   TBranch        *b_Jet_EnShiftedUp;   //!
-   TBranch        *b_Jet_PartonFlavour;   //!
-   TBranch        *b_Jet_HadronFlavour;   //!
-   TBranch        *b_Jet_PFId;   //!
-   TBranch        *b_Jet_PFIdVeto;   //!
-   TBranch        *b_Jet_PhiResolution_MC;   //!
-   TBranch        *b_Jet_PhiResolution_DATA;   //!
-   TBranch        *b_Jet_EnergyResolution_MC;   //!
-   TBranch        *b_Jet_EnergyResolution_DATA;   //!
-   TBranch        *b_Jet_EnergyResolution_SF;   //!
-   TBranch        *b_Jet_EnergyResolution_SFDown;   //!
-   TBranch        *b_Jet_EnergyResolution_SFUp;   //!
-   TBranch        *b_Jet_PileUpId;   //!
-   TBranch        *b_Jet_PileUpMVA;   //!
-   TBranch        *b_Jet_bDisc;   //!
-   TBranch        *b_Jet_bDisc_pfCombinedInclusiveSecondaryVertexV2BJetTags;   //!
-   TBranch        *b_Jet_bDisc_softPFMuonBJetTags;   //!
-   TBranch        *b_Jet_bDisc_softPFMuonByIP3dBJetTags;   //!
-   TBranch        *b_Jet_bDisc_softPFElectronByPtBJetTags;   //!
-   TBranch        *b_Jet_bDisc_softPFElectronBJetTags;   //!
-   TBranch        *b_Jet_bDisc_softPFMuonByPtBJetTags;   //!
-   TBranch        *b_Jet_bDisc_softPFElectronByIP3dBJetTags;   //!
-   TBranch        *b_Jet_bDisc_softPFMuonByIP2dBJetTags;   //!
-   TBranch        *b_Jet_bDisc_softPFElectronByIP2dBJetTags;   //!
-   TBranch        *b_Jet_isJet;   //!
-   TBranch        *b_LHE_Central;   //!
-   TBranch        *b_LHE_Id;   //!
-   TBranch        *b_LHE_Weight;   //!
-   TBranch        *b_Frag_Cen_Weight;   //!
-   TBranch        *b_Frag_Up_Weight;   //!
-   TBranch        *b_Frag_Down_Weight;   //!
-   TBranch        *b_Frag_Peterson_Weight;   //!
-   TBranch        *b_Semilep_BrUp_Weight;   //!
-   TBranch        *b_Semilep_BrDown_Weight;   //!
-   TBranch        *b_MET;   //!
-   TBranch        *b_MET_Significance;   //!
-   TBranch        *b_MET_JetEnShiftedUp_PT;   //!
-   TBranch        *b_MET_JetEnShiftedUp_Phi;   //!
-   TBranch        *b_MET_JetEnShiftedDown_PT;   //!
-   TBranch        *b_MET_JetEnShiftedDown_Phi;   //!
-   TBranch        *b_MET_MuonEnShiftedUp_PT;   //!
-   TBranch        *b_MET_MuonEnShiftedUp_Phi;   //!
-   TBranch        *b_MET_MuonEnShiftedDown_PT;   //!
-   TBranch        *b_MET_MuonEnShiftedDown_Phi;   //!
-   TBranch        *b_MET_ElectronEnShiftedUp_PT;   //!
-   TBranch        *b_MET_ElectronEnShiftedUp_Phi;   //!
-   TBranch        *b_MET_ElectronEnShiftedDown_PT;   //!
-   TBranch        *b_MET_ElectronEnShiftedDown_Phi;   //!
-   TBranch        *b_MET_UnclusteredEnShiftedUp_PT;   //!
-   TBranch        *b_MET_UnclusteredEnShiftedUp_Phi;   //!
-   TBranch        *b_MET_UnclusteredEnShiftedDown_PT;   //!
-   TBranch        *b_MET_UnclusteredEnShiftedDown_Phi;   //!
-   TBranch        *b_MET_JetResShiftedUp_PT;   //!
-   TBranch        *b_MET_JetResShiftedUp_Phi;   //!
-   TBranch        *b_MET_JetResShiftedDown_PT;   //!
-   TBranch        *b_MET_JetResShiftedDown_Phi;   //!
-   TBranch        *b_METEGClean;   //!
-   TBranch        *b_METEGClean_Significance;   //!
-   TBranch        *b_METEGClean_JetEnShiftedUp_PT;   //!
-   TBranch        *b_METEGClean_JetEnShiftedUp_Phi;   //!
-   TBranch        *b_METEGClean_JetEnShiftedDown_PT;   //!
-   TBranch        *b_METEGClean_JetEnShiftedDown_Phi;   //!
-   TBranch        *b_METEGClean_MuonEnShiftedUp_PT;   //!
-   TBranch        *b_METEGClean_MuonEnShiftedUp_Phi;   //!
-   TBranch        *b_METEGClean_MuonEnShiftedDown_PT;   //!
-   TBranch        *b_METEGClean_MuonEnShiftedDown_Phi;   //!
-   TBranch        *b_METEGClean_ElectronEnShiftedUp_PT;   //!
-   TBranch        *b_METEGClean_ElectronEnShiftedUp_Phi;   //!
-   TBranch        *b_METEGClean_ElectronEnShiftedDown_PT;   //!
-   TBranch        *b_METEGClean_ElectronEnShiftedDown_Phi;   //!
-   TBranch        *b_METEGClean_UnclusteredEnShiftedUp_PT;   //!
-   TBranch        *b_METEGClean_UnclusteredEnShiftedUp_Phi;   //!
-   TBranch        *b_METEGClean_UnclusteredEnShiftedDown_PT;   //!
-   TBranch        *b_METEGClean_UnclusteredEnShiftedDown_Phi;   //!
-   TBranch        *b_METEGClean_JetResShiftedUp_PT;   //!
-   TBranch        *b_METEGClean_JetResShiftedUp_Phi;   //!
-   TBranch        *b_METEGClean_JetResShiftedDown_PT;   //!
-   TBranch        *b_METEGClean_JetResShiftedDown_Phi;   //!
-   TBranch        *b_METMUEGClean;   //!
-   TBranch        *b_METMUEGClean_Significance;   //!
-   TBranch        *b_METMUEGClean_JetEnShiftedUp_PT;   //!
-   TBranch        *b_METMUEGClean_JetEnShiftedUp_Phi;   //!
-   TBranch        *b_METMUEGClean_JetEnShiftedDown_PT;   //!
-   TBranch        *b_METMUEGClean_JetEnShiftedDown_Phi;   //!
-   TBranch        *b_METMUEGClean_MuonEnShiftedUp_PT;   //!
-   TBranch        *b_METMUEGClean_MuonEnShiftedUp_Phi;   //!
-   TBranch        *b_METMUEGClean_MuonEnShiftedDown_PT;   //!
-   TBranch        *b_METMUEGClean_MuonEnShiftedDown_Phi;   //!
-   TBranch        *b_METMUEGClean_ElectronEnShiftedUp_PT;   //!
-   TBranch        *b_METMUEGClean_ElectronEnShiftedUp_Phi;   //!
-   TBranch        *b_METMUEGClean_ElectronEnShiftedDown_PT;   //!
-   TBranch        *b_METMUEGClean_ElectronEnShiftedDown_Phi;   //!
-   TBranch        *b_METMUEGClean_UnclusteredEnShiftedUp_PT;   //!
-   TBranch        *b_METMUEGClean_UnclusteredEnShiftedUp_Phi;   //!
-   TBranch        *b_METMUEGClean_UnclusteredEnShiftedDown_PT;   //!
-   TBranch        *b_METMUEGClean_UnclusteredEnShiftedDown_Phi;   //!
-   TBranch        *b_METMUEGClean_JetResShiftedUp_PT;   //!
-   TBranch        *b_METMUEGClean_JetResShiftedUp_Phi;   //!
-   TBranch        *b_METMUEGClean_JetResShiftedDown_PT;   //!
-   TBranch        *b_METMUEGClean_JetResShiftedDown_Phi;   //!
-   TBranch        *b_METMUEGCleanCor;   //!
-   TBranch        *b_METMUEGCleanCor_Significance;   //!
-   TBranch        *b_METMUEGCleanCor_JetEnShiftedUp_PT;   //!
-   TBranch        *b_METMUEGCleanCor_JetEnShiftedUp_Phi;   //!
-   TBranch        *b_METMUEGCleanCor_JetEnShiftedDown_PT;   //!
-   TBranch        *b_METMUEGCleanCor_JetEnShiftedDown_Phi;   //!
-   TBranch        *b_METMUEGCleanCor_MuonEnShiftedUp_PT;   //!
-   TBranch        *b_METMUEGCleanCor_MuonEnShiftedUp_Phi;   //!
-   TBranch        *b_METMUEGCleanCor_MuonEnShiftedDown_PT;   //!
-   TBranch        *b_METMUEGCleanCor_MuonEnShiftedDown_Phi;   //!
-   TBranch        *b_METMUEGCleanCor_ElectronEnShiftedUp_PT;   //!
-   TBranch        *b_METMUEGCleanCor_ElectronEnShiftedUp_Phi;   //!
-   TBranch        *b_METMUEGCleanCor_ElectronEnShiftedDown_PT;   //!
-   TBranch        *b_METMUEGCleanCor_ElectronEnShiftedDown_Phi;   //!
-   TBranch        *b_METMUEGCleanCor_UnclusteredEnShiftedUp_PT;   //!
-   TBranch        *b_METMUEGCleanCor_UnclusteredEnShiftedUp_Phi;   //!
-   TBranch        *b_METMUEGCleanCor_UnclusteredEnShiftedDown_PT;   //!
-   TBranch        *b_METMUEGCleanCor_UnclusteredEnShiftedDown_Phi;   //!
-   TBranch        *b_METMUEGCleanCor_JetResShiftedUp_PT;   //!
-   TBranch        *b_METMUEGCleanCor_JetResShiftedUp_Phi;   //!
-   TBranch        *b_METMUEGCleanCor_JetResShiftedDown_PT;   //!
-   TBranch        *b_METMUEGCleanCor_JetResShiftedDown_Phi;   //!
-   TBranch        *b_METMUCleanCor;   //!
-   TBranch        *b_METMUCleanCor_Significance;   //!
-   TBranch        *b_METMUCleanCor_JetEnShiftedUp_PT;   //!
-   TBranch        *b_METMUCleanCor_JetEnShiftedUp_Phi;   //!
-   TBranch        *b_METMUCleanCor_JetEnShiftedDown_PT;   //!
-   TBranch        *b_METMUCleanCor_JetEnShiftedDown_Phi;   //!
-   TBranch        *b_METMUCleanCor_MuonEnShiftedUp_PT;   //!
-   TBranch        *b_METMUCleanCor_MuonEnShiftedUp_Phi;   //!
-   TBranch        *b_METMUCleanCor_MuonEnShiftedDown_PT;   //!
-   TBranch        *b_METMUCleanCor_MuonEnShiftedDown_Phi;   //!
-   TBranch        *b_METMUCleanCor_ElectronEnShiftedUp_PT;   //!
-   TBranch        *b_METMUCleanCor_ElectronEnShiftedUp_Phi;   //!
-   TBranch        *b_METMUCleanCor_ElectronEnShiftedDown_PT;   //!
-   TBranch        *b_METMUCleanCor_ElectronEnShiftedDown_Phi;   //!
-   TBranch        *b_METMUCleanCor_UnclusteredEnShiftedUp_PT;   //!
-   TBranch        *b_METMUCleanCor_UnclusteredEnShiftedUp_Phi;   //!
-   TBranch        *b_METMUCleanCor_UnclusteredEnShiftedDown_PT;   //!
-   TBranch        *b_METMUCleanCor_UnclusteredEnShiftedDown_Phi;   //!
-   TBranch        *b_METMUCleanCor_JetResShiftedUp_PT;   //!
-   TBranch        *b_METMUCleanCor_JetResShiftedUp_Phi;   //!
-   TBranch        *b_METMUCleanCor_JetResShiftedDown_PT;   //!
-   TBranch        *b_METMUCleanCor_JetResShiftedDown_Phi;   //!
-   TBranch        *b_METUnCor;   //!
-   TBranch        *b_METUnCor_Significance;   //!
-   TBranch        *b_METUnCor_JetEnShiftedUp_PT;   //!
-   TBranch        *b_METUnCor_JetEnShiftedUp_Phi;   //!
-   TBranch        *b_METUnCor_JetEnShiftedDown_PT;   //!
-   TBranch        *b_METUnCor_JetEnShiftedDown_Phi;   //!
-   TBranch        *b_METUnCor_MuonEnShiftedUp_PT;   //!
-   TBranch        *b_METUnCor_MuonEnShiftedUp_Phi;   //!
-   TBranch        *b_METUnCor_MuonEnShiftedDown_PT;   //!
-   TBranch        *b_METUnCor_MuonEnShiftedDown_Phi;   //!
-   TBranch        *b_METUnCor_ElectronEnShiftedUp_PT;   //!
-   TBranch        *b_METUnCor_ElectronEnShiftedUp_Phi;   //!
-   TBranch        *b_METUnCor_ElectronEnShiftedDown_PT;   //!
-   TBranch        *b_METUnCor_ElectronEnShiftedDown_Phi;   //!
-   TBranch        *b_METUnCor_UnclusteredEnShiftedUp_PT;   //!
-   TBranch        *b_METUnCor_UnclusteredEnShiftedUp_Phi;   //!
-   TBranch        *b_METUnCor_UnclusteredEnShiftedDown_PT;   //!
-   TBranch        *b_METUnCor_UnclusteredEnShiftedDown_Phi;   //!
-   TBranch        *b_METUnCor_JetResShiftedUp_PT;   //!
-   TBranch        *b_METUnCor_JetResShiftedUp_Phi;   //!
-   TBranch        *b_METUnCor_JetResShiftedDown_PT;   //!
-   TBranch        *b_METUnCor_JetResShiftedDown_Phi;   //!
-   TBranch        *b_Muon;   //!
-   TBranch        *b_GenMuon;   //!
-   TBranch        *b_Muon_Charge;   //!
-   TBranch        *b_Muon_Count;   //!
-   TBranch        *b_Muon_PFIsodBeta03;   //!
-   TBranch        *b_Muon_PFIsodBeta04;   //!
-   TBranch        *b_Muon_isHighPt;   //!
-   TBranch        *b_Muon_isLoose;   //!
-   TBranch        *b_Muon_isMedium;   //!
-   TBranch        *b_Muon_isMedium2016;   //!
-   TBranch        *b_Muon_isSoft;   //!
-   TBranch        *b_Muon_isTight;   //!
-   TBranch        *b_Muon_pdgId;   //!
-   TBranch        *b_Muon_rand1;   //!
-   TBranch        *b_Muon_rand2;   //!
-   TBranch        *b_Muon_relIso03;   //!
-   TBranch        *b_Muon_relIso04;   //!
-   TBranch        *b_Muon_trackerLayers;   //!
-   TBranch        *b_PDFWeight_BjorkenX1;   //!
-   TBranch        *b_PDFWeight_BjorkenX2;   //!
-   TBranch        *b_PDFWeight_Cent;   //!
-   TBranch        *b_PDFWeight_Cent_Down;   //!
-   TBranch        *b_PDFWeight_Cent_Up;   //!
-   TBranch        *b_PDFWeight_Id1;   //!
-   TBranch        *b_PDFWeight_Id2;   //!
-   TBranch        *b_PDFWeight_PDF1;   //!
-   TBranch        *b_PDFWeight_PDF2;   //!
-   TBranch        *b_PDFWeight_Q;   //!
-   TBranch        *b_PDFWeight_Var1_Down;   //!
-   TBranch        *b_PDFWeight_Var1_Up;   //!
-   TBranch        *b_PDFWeight_Var2_Down;   //!
-   TBranch        *b_PDFWeight_Var2_Up;   //!
-   TBranch        *b_Photon;   //!
-   TBranch        *b_Photon_Count;   //!
-   TBranch        *b_Photon_SCB_Loose;   //!
-   TBranch        *b_Photon_SCB_Medium;   //!
-   TBranch        *b_Photon_SCB_Tight;   //!
-   TBranch        *b_Photon_ChaHadIso;   //!
-   TBranch        *b_Photon_NeuHadIso;   //!
-   TBranch        *b_Photon_PhoIso;   //!
-   TBranch        *b_Photon_WorstChargedIso;   //!
-   TBranch        *b_Photon_ChaHadEffArea;   //!
-   TBranch        *b_Photon_NeuHadEffArea;   //!
-   TBranch        *b_Photon_PhoHadEffArea;   //!
-   TBranch        *b_Photon_R9;   //!
-   TBranch        *b_Photon_HoverE;   //!
-   TBranch        *b_Photon_SuperCluster_Eta;   //!
-   TBranch        *b_Photon_SuperCluster_Phi;   //!
-   TBranch        *b_Photon_SuperCluster_EtaWidth;   //!
-   TBranch        *b_Photon_SuperCluster_PhiWidth;   //!
-   TBranch        *b_Photon_SuperCluster_Energy;   //!
-   TBranch        *b_Photon_SuperCluster_RawEnergy;   //!
-   TBranch        *b_Photon_ElectronVeto;   //!
-   TBranch        *b_Photon_Full5x5_SigmaIetaIeta;   //!
-   TBranch        *b_Photon_MVANonTrig_Tight;   //!
-   TBranch        *b_PV_Count;   //!
-   TBranch        *b_PileUp_Count_Interaction;   //!
-   TBranch        *b_PileUp_Count_Intime;   //!
-   TBranch        *b_Rho;   //!
-   TBranch        *b_Trigger_Name;   //!
-   TBranch        *b_Trigger_PreScale;   //!
-   TBranch        *b_Trigger_isError;   //!
-   TBranch        *b_Trigger_isPass;   //!
-   TBranch        *b_Trigger_isRun;   //!
-   TBranch        *b_Vertex_SumPtSquare;   //!
-   TBranch        *b_Vertex_X;   //!
-   TBranch        *b_Vertex_X_Error;   //!
-   TBranch        *b_Vertex_Y;   //!
-   TBranch        *b_Vertex_Y_Error;   //!
-   TBranch        *b_Vertex_Z;   //!
-   TBranch        *b_Vertex_Z_Error;   //!
+  TClonesArray    *Muon;
+  TClonesArray    *GenMuon;
+  vector<int>     *Muon_Charge;
+  Int_t           Muon_Count;
+  vector<double>  *Muon_PFIsodBeta03;
+  vector<double>  *Muon_PFIsodBeta04;
+  vector<bool>    *Muon_isHighPt;
+  vector<bool>    *Muon_isLoose;
+  vector<bool>    *Muon_isMedium;
+  vector<bool>    *Muon_isMedium2016;
+  vector<bool>    *Muon_isSoft;
+  vector<bool>    *Muon_isTight;
+  vector<int>     *Muon_pdgId;
+  vector<double>  *Muon_rand1;
+  vector<double>  *Muon_rand2;
+  vector<double>  *Muon_relIso03;
+  vector<double>  *Muon_relIso04;
+  vector<int>     *Muon_trackerLayers;
 
-   SSBTree(TTree *tree=0);
-   virtual ~SSBTree();
-   virtual Int_t    Cut(Long64_t entry);
-   virtual Int_t    GetEntry(Long64_t entry);
-   virtual Long64_t LoadTree(Long64_t entry);
-   virtual void     Init(TTree *tree);
-   virtual void     Loop();
-   virtual Bool_t   Notify();
-   virtual void     Show(Long64_t entry = -1);
+
+  // ssbtree->Branch("Muon", "TClonesArray", &VariableBox_LorentzVector["Muon"], 32000, 0);
+  // VariableBox_LorentzVector["Muon"]->BypassStreamer();
+  // ssbtree->Branch("GenMuon", "TClonesArray", &VariableBox_LorentzVector["GenMuon"], 32000, 0);
+  // VariableBox_LorentzVector["GenMuon"]->BypassStreamer();
+  // ssbtree->Branch("Muon_Charge", &VectorBox_Int["Muon_Charge"]);
+  // ssbtree->Branch("Muon_Count", &VariableBox_Int["Muon_Count"], "Muon_Count/I");
+  // ssbtree->Branch("Muon_PFIsodBeta03", &VectorBox_Double["Muon_PFIsodBeta03"]);
+  // ssbtree->Branch("Muon_PFIsodBeta04", &VectorBox_Double["Muon_PFIsodBeta04"]);
+  // ssbtree->Branch("Muon_isHighPt", &VectorBox_Bool["Muon_isHighPt"]);
+  // ssbtree->Branch("Muon_isHighTrkPt", &VectorBox_Bool["Muon_isHighTrkPt"]);
+  // ssbtree->Branch("Muon_isLoose", &VectorBox_Bool["Muon_isLoose"]);
+  // ssbtree->Branch("Muon_isMedium", &VectorBox_Bool["Muon_isMedium"]);
+  // ssbtree->Branch("Muon_isMediumPrompt", &VectorBox_Bool["Muon_isMediumPrompt"]);
+  // ssbtree->Branch("Muon_isSoft", &VectorBox_Bool["Muon_isSoft"]);
+  // ssbtree->Branch("Muon_isTight", &VectorBox_Bool["Muon_isTight"]);
+
+  // ssbtree->Branch("Muon_isHighPt_calc", &VectorBox_Bool["Muon_isHighPt_calc"]);
+  // ssbtree->Branch("Muon_isHighTrkPt_calc", &VectorBox_Bool["Muon_isHighTrkPt_calc"]);
+  // ssbtree->Branch("Muon_isLoose_calc", &VectorBox_Bool["Muon_isLoose_calc"]);
+  // ssbtree->Branch("Muon_isMedium_calc", &VectorBox_Bool["Muon_isMedium_calc"]);
+  // ssbtree->Branch("Muon_isTight_calc", &VectorBox_Bool["Muon_isTight_calc"]);
+
+  // ssbtree->Branch("Muon_isPF", &VectorBox_Bool["Muon_isPF"]);
+  // ssbtree->Branch("Muon_isGlobal", &VectorBox_Bool["Muon_isGlobal"]);
+  // ssbtree->Branch("Muon_isTracker", &VectorBox_Bool["Muon_isTracker"]);
+
+  // ssbtree->Branch("Muon_ValidTrackHitFraction", &VectorBox_Double["Muon_ValidTrackHitFraction"]);
+  // ssbtree->Branch("Muon_GlobalTrackChi2", &VectorBox_Double["Muon_GlobalTrackChi2"]);
+  // ssbtree->Branch("Muon_TrackerSTAPositionMatch", &VectorBox_Double["Muon_TrackerSTAPositionMatch"]);
+  // ssbtree->Branch("Muon_TrackKink", &VectorBox_Double["Muon_TrackKink"]);
+  // ssbtree->Branch("Muon_TrackExist", &VectorBox_Bool["Muon_TrackExist"]);
+  // ssbtree->Branch("Muon_SegmentCompatibility", &VectorBox_Double["Muon_SegmentCompatibility"]);
+
+  // ssbtree->Branch("Muon_GlobalMuonTrackChamberHit", &VectorBox_Double["Muon_GlobalMuonTrackChamberHit"]);
+  // ssbtree->Branch("Muon_TunePGlobalMuonTrackChamberHit", &VectorBox_Double["Muon_TunePGlobalMuonTrackChamberHit"]);
+  // ssbtree->Branch("Muon_TunePpTError", &VectorBox_Double["Muon_TunePpTError"]);
+  // ssbtree->Branch("Muon_TunePpT", &VectorBox_Double["Muon_TunePpT"]);
+  // ssbtree->Branch("Muon_StationsHasSegments", &VectorBox_Double["Muon_StationsHasSegments"]);
+
+  // ssbtree->Branch("Muon_dxy", &VectorBox_Double["Muon_dxy"]);
+  // ssbtree->Branch("Muon_dB", &VectorBox_Double["Muon_dB"]);
+  // ssbtree->Branch("Muon_dz", &VectorBox_Double["Muon_dz"]);
+  // ssbtree->Branch("Muon_PixelHit", &VectorBox_Double["Muon_PixelHit"]);
+  // ssbtree->Branch("Muon_TrackLayerWithHit", &VectorBox_Double["Muon_TrackLayerWithHit"]);
+
+  // ssbtree->Branch("Muon_isPFIsoVeryLoose", &VectorBox_Bool["Muon_isPFIsoVeryLoose"]);
+  // ssbtree->Branch("Muon_isPFIsoLoose", &VectorBox_Bool["Muon_isPFIsoLoose"]);
+  // ssbtree->Branch("Muon_isPFIsoMedium", &VectorBox_Bool["Muon_isPFIsoMedium"]);
+  // ssbtree->Branch("Muon_isPFIsoTight", &VectorBox_Bool["Muon_isPFIsoTight"]);
+  // ssbtree->Branch("Muon_isPFIsoVeryTight", &VectorBox_Bool["Muon_isPFIsoVeryTight"]);
+  // ssbtree->Branch("Muon_isPFIsoVeryVeryTight", &VectorBox_Bool["Muon_isPFIsoVeryVeryTight"]);
+
+  // ssbtree->Branch("Muon_pdgId", &VectorBox_Int["Muon_pdgId"]);
+  // ssbtree->Branch("Muon_rand1", &VectorBox_Double["Muon_rand1"]);
+  // ssbtree->Branch("Muon_rand2", &VectorBox_Double["Muon_rand2"]);
+  // ssbtree->Branch("Muon_relIso03", &VectorBox_Double["Muon_relIso03"]);
+  // ssbtree->Branch("Muon_relIso04", &VectorBox_Double["Muon_relIso04"]);
+  // ssbtree->Branch("Muon_trackerLayers", &VectorBox_Int["Muon_trackerLayers"]);
+
+  // ssbtree->Branch("Muon_tuneP_Pt", &VectorBox_Double["Muon_tuneP_Pt"]);
+  // ssbtree->Branch("Muon_tuneP_Eta", &VectorBox_Double["Muon_tuneP_Eta"]);
+  // ssbtree->Branch("Muon_tuneP_Phi", &VectorBox_Double["Muon_tuneP_Phi"]);
+  // ssbtree->Branch("Muon_tuneP_Charge", &VectorBox_Int["Muon_tuneP_Charge"]);
+
+
+  vector<double>  *PDFWeight_BjorkenX1;
+  vector<double>  *PDFWeight_BjorkenX2;
+  vector<double>  *PDFWeight_Cent;
+  vector<double>  *PDFWeight_Cent_Down;
+  vector<double>  *PDFWeight_Cent_Up;
+  vector<int>     *PDFWeight_Id1;
+  vector<int>     *PDFWeight_Id2;
+  vector<double>  *PDFWeight_PDF1;
+  vector<double>  *PDFWeight_PDF2;
+  vector<double>  *PDFWeight_Q;
+  vector<double>  *PDFWeight_Var1_Down;
+  vector<double>  *PDFWeight_Var1_Up;
+  vector<double>  *PDFWeight_Var2_Down;
+  vector<double>  *PDFWeight_Var2_Up;
+  TClonesArray    *Photon;
+  Int_t           Photon_Count;
+  vector<bool>    *Photon_SCB_Loose;
+  vector<bool>    *Photon_SCB_Medium;
+  vector<bool>    *Photon_SCB_Tight;
+  vector<float>   *Photon_ChaHadIso;
+  vector<float>   *Photon_NeuHadIso;
+  vector<float>   *Photon_PhoIso;
+  vector<float>   *Photon_WorstChargedIso;
+  vector<float>   *Photon_ChaHadEffArea;
+  vector<float>   *Photon_NeuHadEffArea;
+  vector<float>   *Photon_PhoHadEffArea;
+  vector<double>  *Photon_R9;
+  vector<double>  *Photon_HoverE;
+  vector<double>  *Photon_SuperCluster_Eta;
+  vector<double>  *Photon_SuperCluster_Phi;
+  vector<double>  *Photon_SuperCluster_EtaWidth;
+  vector<double>  *Photon_SuperCluster_PhiWidth;
+  vector<double>  *Photon_SuperCluster_Energy;
+  vector<double>  *Photon_SuperCluster_RawEnergy;
+  vector<bool>    *Photon_ElectronVeto;
+  vector<double>  *Photon_Full5x5_SigmaIetaIeta;
+  vector<bool>    *Photon_MVANonTrig_Tight;
+  Int_t           PV_Count;
+  Int_t           PileUp_Count_Interaction;
+  Float_t         PileUp_Count_Intime;
+  vector<double>  *Rho;
+  vector<string>  *Trigger_Name;
+  vector<unsigned int> *Trigger_PreScale;
+  vector<bool>    *Trigger_isError;
+  vector<bool>    *Trigger_isPass;
+  vector<bool>    *Trigger_isRun;
+  vector<double>  *Vertex_SumPtSquare;
+  vector<double>  *Vertex_X;
+  vector<double>  *Vertex_X_Error;
+  vector<double>  *Vertex_Y;
+  vector<double>  *Vertex_Y_Error;
+  vector<double>  *Vertex_Z;
+  vector<double>  *Vertex_Z_Error;
+
+  // List of branches
+  TBranch        *b_Info_EventNumber;   //!
+  TBranch        *b_Info_Luminosity;   //!
+  TBranch        *b_Info_RunNumber;   //!
+  TBranch        *b_Info_isData;   //!
+  TBranch        *b_Channel_Idx;   //!
+  TBranch        *b_Channel_Idx_Final;   //!
+  TBranch        *b_Channel_Lepton_Count;   //!
+  TBranch        *b_Channel_Lepton_Count_Final;   //!
+  TBranch        *b_Channel_Jets;   //!
+  TBranch        *b_Channel_Jets_Abs;   //!
+  TBranch        *b_L1_PreFire_Central;   //!
+  TBranch        *b_L1_PreFire_Up;   //!
+  TBranch        *b_L1_PreFire_Down;   //!
+  TBranch        *b_METFilter_Name;   //!
+  TBranch        *b_METFilter_isError;   //!
+  TBranch        *b_METFilter_isPass;   //!
+  TBranch        *b_METFilter_isRun;   //!
+  TBranch        *b_METFilterAdd_Name;   //!
+  TBranch        *b_METFilterAdd_isPass;   //!
+  TBranch        *b_Elec;   //!
+  TBranch        *b_Elec_Charge;   //!
+  TBranch        *b_Elec_ChargeId_GsfCtf;   //!
+  TBranch        *b_Elec_ChargeId_GsfCtfPx;   //!
+  TBranch        *b_Elec_ChargeId_GsfPx;   //!
+  TBranch        *b_Elec_Charge_CtfTr;   //!
+  TBranch        *b_Elec_Charge_GsfTr;   //!
+  TBranch        *b_Elec_Charge_Px;   //!
+  TBranch        *b_Elec_Conversion;   //!
+  TBranch        *b_Elec_Count;   //!
+  TBranch        *b_Elec_Id_Loose;   //!
+  TBranch        *b_Elec_Id_RobustHighEnergy;   //!
+  TBranch        *b_Elec_Id_RobustLoose;   //!
+  TBranch        *b_Elec_Id_RobustTight;   //!
+  TBranch        *b_Elec_Id_Tight;   //!
+  TBranch        *b_Elec_Inner_Hit;   //!
+  TBranch        *b_Elec_MVA_Medium;   //!
+  TBranch        *b_Elec_MVA_Tight;   //!
+  TBranch        *b_Elec_MVA_HZZ;   //!
+  TBranch        *b_Elec_MVA_Values;   //!
+  TBranch        *b_Elec_MVA_Categories;   //!
+  TBranch        *b_Elec_MVA_HZZ_Values;   //!
+  TBranch        *b_Elec_MVA_HZZ_Categories;   //!
+  TBranch        *b_Elec_PFIsoRho03;   //!
+  TBranch        *b_Elec_PFIsoRho04;   //!
+  TBranch        *b_Elec_PFIsoValid;   //!
+  TBranch        *b_Elec_PFIsodBeta03;   //!
+  TBranch        *b_Elec_PFIsodBeta04;   //!
+  TBranch        *b_Elec_SCB_Loose;   //!
+  TBranch        *b_Elec_SCB_Medium;   //!
+  TBranch        *b_Elec_SCB_Tight;   //!
+  TBranch        *b_Elec_SCB_Veto;   //!
+  TBranch        *b_Elec_SCB_dEtaIn;   //!
+  TBranch        *b_Elec_SCB_dPhiIn;   //!
+  TBranch        *b_Elec_SCB_hOverE;   //!
+  TBranch        *b_Elec_SCB_HEEP;   //!
+  TBranch        *b_Elec_SCB_ooEmooP;   //!
+  TBranch        *b_Elec_SCB_sigmaIetaIeta;   //!
+  TBranch        *b_Elec_ScaleUp;   //!
+  TBranch        *b_Elec_ScaleDown;   //!
+  TBranch        *b_Elec_SigmaUp;   //!
+  TBranch        *b_Elec_SigmaDown;   //!
+  TBranch        *b_Elec_ScSmUpUp;   //!
+  TBranch        *b_Elec_ScSmUpDown;   //!
+  TBranch        *b_Elec_ScSmDownUp;   //!
+  TBranch        *b_Elec_ScSmDownDown;   //!
+  TBranch        *b_Elec_Supercluster_Eta;   //!
+  TBranch        *b_Elec_Track_CtfdXY;   //!
+  TBranch        *b_Elec_Track_CtfdZ;   //!
+  TBranch        *b_Elec_Track_GsfdXY;   //!
+  TBranch        *b_Elec_Track_GsfdZ;   //!
+  TBranch        *b_Elec_pdgId;   //!
+  TBranch        *b_Elec_relIso03;   //!
+  TBranch        *b_Elec_relIso04;   //!
+  TBranch        *b_Elec_Rnd;   //!
+  TBranch        *b_Filter_Greedy_Muon;   //!
+  TBranch        *b_Filter_Inconsistent_MuonPt;   //!
+  TBranch        *b_Filter_PFReco_Muon;   //!
+  TBranch        *b_Filter_PV;   //!
+  TBranch        *b_GenJet;   //!
+  TBranch        *b_GenJet_Count;   //!
+  TBranch        *b_GenJet_ECalEnergy;   //!
+  TBranch        *b_GenJet_HCalEnergy;   //!
+  TBranch        *b_GenMET;   //!
+  TBranch        *b_GenMET_Count;   //!
+  TBranch        *b_GenPar;   //!
+  TBranch        *b_GenPar_Count;   //!
+  TBranch        *b_GenPar_Dau1_Idx;   //!
+  TBranch        *b_GenPar_Dau2_Idx;   //!
+  TBranch        *b_GenPar_Dau_Counter;   //!
+  TBranch        *b_GenPar_Idx;   //!
+  TBranch        *b_GenPar_Mom1_Idx;   //!
+  TBranch        *b_GenPar_Mom2_Idx;   //!
+  TBranch        *b_GenPar_Mom_Counter;   //!
+  TBranch        *b_GenPar_Status;   //!
+  TBranch        *b_GenPar_pdgId;   //!
+  TBranch        *b_Gen_EventWeight;   //!
+  TBranch        *b_GenTop;   //!
+  TBranch        *b_GenAnTop;   //!
+  TBranch        *b_GenBJet;   //!
+  TBranch        *b_GenBJet_Count;   //!
+  TBranch        *b_GenBHad;   //!
+  TBranch        *b_GenBHad_Count;   //!
+  TBranch        *b_GenBHad_pdgId;   //!
+  TBranch        *b_GenBHad_Flavour;   //!
+  TBranch        *b_GenBHad_FromTopWeakDecay;   //!
+  TBranch        *b_Jet;   //!
+  TBranch        *b_Jet_Charge;   //!
+  TBranch        *b_Jet_Count;   //!
+  TBranch        *b_Jet_EnShiftedDown;   //!
+  TBranch        *b_Jet_EnShiftedUp;   //!
+  TBranch        *b_Jet_PartonFlavour;   //!
+  TBranch        *b_Jet_HadronFlavour;   //!
+  TBranch        *b_Jet_PFId;   //!
+  TBranch        *b_Jet_PFIdVeto;   //!
+  TBranch        *b_Jet_PhiResolution_MC;   //!
+  TBranch        *b_Jet_PhiResolution_DATA;   //!
+  TBranch        *b_Jet_EnergyResolution_MC;   //!
+  TBranch        *b_Jet_EnergyResolution_DATA;   //!
+  TBranch        *b_Jet_EnergyResolution_SF;   //!
+  TBranch        *b_Jet_EnergyResolution_SFDown;   //!
+  TBranch        *b_Jet_EnergyResolution_SFUp;   //!
+  TBranch        *b_Jet_PileUpId;   //!
+  TBranch        *b_Jet_PileUpMVA;   //!
+  TBranch        *b_Jet_bDisc;   //!
+  TBranch        *b_Jet_bDisc_pfCombinedInclusiveSecondaryVertexV2BJetTags;   //!
+  TBranch        *b_Jet_bDisc_softPFMuonBJetTags;   //!
+  TBranch        *b_Jet_bDisc_softPFMuonByIP3dBJetTags;   //!
+  TBranch        *b_Jet_bDisc_softPFElectronByPtBJetTags;   //!
+  TBranch        *b_Jet_bDisc_softPFElectronBJetTags;   //!
+  TBranch        *b_Jet_bDisc_softPFMuonByPtBJetTags;   //!
+  TBranch        *b_Jet_bDisc_softPFElectronByIP3dBJetTags;   //!
+  TBranch        *b_Jet_bDisc_softPFMuonByIP2dBJetTags;   //!
+  TBranch        *b_Jet_bDisc_softPFElectronByIP2dBJetTags;   //!
+  TBranch        *b_Jet_isJet;   //!
+  TBranch        *b_LHE_Central;   //!
+  TBranch        *b_LHE_Id;   //!
+  TBranch        *b_LHE_Weight;   //!
+  TBranch        *b_Frag_Cen_Weight;   //!
+  TBranch        *b_Frag_Up_Weight;   //!
+  TBranch        *b_Frag_Down_Weight;   //!
+  TBranch        *b_Frag_Peterson_Weight;   //!
+  TBranch        *b_Semilep_BrUp_Weight;   //!
+  TBranch        *b_Semilep_BrDown_Weight;   //!
+  TBranch        *b_MET;   //!
+  TBranch        *b_MET_Significance;   //!
+  TBranch        *b_MET_JetEnShiftedUp_PT;   //!
+  TBranch        *b_MET_JetEnShiftedUp_Phi;   //!
+  TBranch        *b_MET_JetEnShiftedDown_PT;   //!
+  TBranch        *b_MET_JetEnShiftedDown_Phi;   //!
+  TBranch        *b_MET_MuonEnShiftedUp_PT;   //!
+  TBranch        *b_MET_MuonEnShiftedUp_Phi;   //!
+  TBranch        *b_MET_MuonEnShiftedDown_PT;   //!
+  TBranch        *b_MET_MuonEnShiftedDown_Phi;   //!
+  TBranch        *b_MET_ElectronEnShiftedUp_PT;   //!
+  TBranch        *b_MET_ElectronEnShiftedUp_Phi;   //!
+  TBranch        *b_MET_ElectronEnShiftedDown_PT;   //!
+  TBranch        *b_MET_ElectronEnShiftedDown_Phi;   //!
+  TBranch        *b_MET_UnclusteredEnShiftedUp_PT;   //!
+  TBranch        *b_MET_UnclusteredEnShiftedUp_Phi;   //!
+  TBranch        *b_MET_UnclusteredEnShiftedDown_PT;   //!
+  TBranch        *b_MET_UnclusteredEnShiftedDown_Phi;   //!
+  TBranch        *b_MET_JetResShiftedUp_PT;   //!
+  TBranch        *b_MET_JetResShiftedUp_Phi;   //!
+  TBranch        *b_MET_JetResShiftedDown_PT;   //!
+  TBranch        *b_MET_JetResShiftedDown_Phi;   //!
+  TBranch        *b_METEGClean;   //!
+  TBranch        *b_METEGClean_Significance;   //!
+  TBranch        *b_METEGClean_JetEnShiftedUp_PT;   //!
+  TBranch        *b_METEGClean_JetEnShiftedUp_Phi;   //!
+  TBranch        *b_METEGClean_JetEnShiftedDown_PT;   //!
+  TBranch        *b_METEGClean_JetEnShiftedDown_Phi;   //!
+  TBranch        *b_METEGClean_MuonEnShiftedUp_PT;   //!
+  TBranch        *b_METEGClean_MuonEnShiftedUp_Phi;   //!
+  TBranch        *b_METEGClean_MuonEnShiftedDown_PT;   //!
+  TBranch        *b_METEGClean_MuonEnShiftedDown_Phi;   //!
+  TBranch        *b_METEGClean_ElectronEnShiftedUp_PT;   //!
+  TBranch        *b_METEGClean_ElectronEnShiftedUp_Phi;   //!
+  TBranch        *b_METEGClean_ElectronEnShiftedDown_PT;   //!
+  TBranch        *b_METEGClean_ElectronEnShiftedDown_Phi;   //!
+  TBranch        *b_METEGClean_UnclusteredEnShiftedUp_PT;   //!
+  TBranch        *b_METEGClean_UnclusteredEnShiftedUp_Phi;   //!
+  TBranch        *b_METEGClean_UnclusteredEnShiftedDown_PT;   //!
+  TBranch        *b_METEGClean_UnclusteredEnShiftedDown_Phi;   //!
+  TBranch        *b_METEGClean_JetResShiftedUp_PT;   //!
+  TBranch        *b_METEGClean_JetResShiftedUp_Phi;   //!
+  TBranch        *b_METEGClean_JetResShiftedDown_PT;   //!
+  TBranch        *b_METEGClean_JetResShiftedDown_Phi;   //!
+  TBranch        *b_METMUEGClean;   //!
+  TBranch        *b_METMUEGClean_Significance;   //!
+  TBranch        *b_METMUEGClean_JetEnShiftedUp_PT;   //!
+  TBranch        *b_METMUEGClean_JetEnShiftedUp_Phi;   //!
+  TBranch        *b_METMUEGClean_JetEnShiftedDown_PT;   //!
+  TBranch        *b_METMUEGClean_JetEnShiftedDown_Phi;   //!
+  TBranch        *b_METMUEGClean_MuonEnShiftedUp_PT;   //!
+  TBranch        *b_METMUEGClean_MuonEnShiftedUp_Phi;   //!
+  TBranch        *b_METMUEGClean_MuonEnShiftedDown_PT;   //!
+  TBranch        *b_METMUEGClean_MuonEnShiftedDown_Phi;   //!
+  TBranch        *b_METMUEGClean_ElectronEnShiftedUp_PT;   //!
+  TBranch        *b_METMUEGClean_ElectronEnShiftedUp_Phi;   //!
+  TBranch        *b_METMUEGClean_ElectronEnShiftedDown_PT;   //!
+  TBranch        *b_METMUEGClean_ElectronEnShiftedDown_Phi;   //!
+  TBranch        *b_METMUEGClean_UnclusteredEnShiftedUp_PT;   //!
+  TBranch        *b_METMUEGClean_UnclusteredEnShiftedUp_Phi;   //!
+  TBranch        *b_METMUEGClean_UnclusteredEnShiftedDown_PT;   //!
+  TBranch        *b_METMUEGClean_UnclusteredEnShiftedDown_Phi;   //!
+  TBranch        *b_METMUEGClean_JetResShiftedUp_PT;   //!
+  TBranch        *b_METMUEGClean_JetResShiftedUp_Phi;   //!
+  TBranch        *b_METMUEGClean_JetResShiftedDown_PT;   //!
+  TBranch        *b_METMUEGClean_JetResShiftedDown_Phi;   //!
+  TBranch        *b_METMUEGCleanCor;   //!
+  TBranch        *b_METMUEGCleanCor_Significance;   //!
+  TBranch        *b_METMUEGCleanCor_JetEnShiftedUp_PT;   //!
+  TBranch        *b_METMUEGCleanCor_JetEnShiftedUp_Phi;   //!
+  TBranch        *b_METMUEGCleanCor_JetEnShiftedDown_PT;   //!
+  TBranch        *b_METMUEGCleanCor_JetEnShiftedDown_Phi;   //!
+  TBranch        *b_METMUEGCleanCor_MuonEnShiftedUp_PT;   //!
+  TBranch        *b_METMUEGCleanCor_MuonEnShiftedUp_Phi;   //!
+  TBranch        *b_METMUEGCleanCor_MuonEnShiftedDown_PT;   //!
+  TBranch        *b_METMUEGCleanCor_MuonEnShiftedDown_Phi;   //!
+  TBranch        *b_METMUEGCleanCor_ElectronEnShiftedUp_PT;   //!
+  TBranch        *b_METMUEGCleanCor_ElectronEnShiftedUp_Phi;   //!
+  TBranch        *b_METMUEGCleanCor_ElectronEnShiftedDown_PT;   //!
+  TBranch        *b_METMUEGCleanCor_ElectronEnShiftedDown_Phi;   //!
+  TBranch        *b_METMUEGCleanCor_UnclusteredEnShiftedUp_PT;   //!
+  TBranch        *b_METMUEGCleanCor_UnclusteredEnShiftedUp_Phi;   //!
+  TBranch        *b_METMUEGCleanCor_UnclusteredEnShiftedDown_PT;   //!
+  TBranch        *b_METMUEGCleanCor_UnclusteredEnShiftedDown_Phi;   //!
+  TBranch        *b_METMUEGCleanCor_JetResShiftedUp_PT;   //!
+  TBranch        *b_METMUEGCleanCor_JetResShiftedUp_Phi;   //!
+  TBranch        *b_METMUEGCleanCor_JetResShiftedDown_PT;   //!
+  TBranch        *b_METMUEGCleanCor_JetResShiftedDown_Phi;   //!
+  TBranch        *b_METMUCleanCor;   //!
+  TBranch        *b_METMUCleanCor_Significance;   //!
+  TBranch        *b_METMUCleanCor_JetEnShiftedUp_PT;   //!
+  TBranch        *b_METMUCleanCor_JetEnShiftedUp_Phi;   //!
+  TBranch        *b_METMUCleanCor_JetEnShiftedDown_PT;   //!
+  TBranch        *b_METMUCleanCor_JetEnShiftedDown_Phi;   //!
+  TBranch        *b_METMUCleanCor_MuonEnShiftedUp_PT;   //!
+  TBranch        *b_METMUCleanCor_MuonEnShiftedUp_Phi;   //!
+  TBranch        *b_METMUCleanCor_MuonEnShiftedDown_PT;   //!
+  TBranch        *b_METMUCleanCor_MuonEnShiftedDown_Phi;   //!
+  TBranch        *b_METMUCleanCor_ElectronEnShiftedUp_PT;   //!
+  TBranch        *b_METMUCleanCor_ElectronEnShiftedUp_Phi;   //!
+  TBranch        *b_METMUCleanCor_ElectronEnShiftedDown_PT;   //!
+  TBranch        *b_METMUCleanCor_ElectronEnShiftedDown_Phi;   //!
+  TBranch        *b_METMUCleanCor_UnclusteredEnShiftedUp_PT;   //!
+  TBranch        *b_METMUCleanCor_UnclusteredEnShiftedUp_Phi;   //!
+  TBranch        *b_METMUCleanCor_UnclusteredEnShiftedDown_PT;   //!
+  TBranch        *b_METMUCleanCor_UnclusteredEnShiftedDown_Phi;   //!
+  TBranch        *b_METMUCleanCor_JetResShiftedUp_PT;   //!
+  TBranch        *b_METMUCleanCor_JetResShiftedUp_Phi;   //!
+  TBranch        *b_METMUCleanCor_JetResShiftedDown_PT;   //!
+  TBranch        *b_METMUCleanCor_JetResShiftedDown_Phi;   //!
+  TBranch        *b_METUnCor;   //!
+  TBranch        *b_METUnCor_Significance;   //!
+  TBranch        *b_METUnCor_JetEnShiftedUp_PT;   //!
+  TBranch        *b_METUnCor_JetEnShiftedUp_Phi;   //!
+  TBranch        *b_METUnCor_JetEnShiftedDown_PT;   //!
+  TBranch        *b_METUnCor_JetEnShiftedDown_Phi;   //!
+  TBranch        *b_METUnCor_MuonEnShiftedUp_PT;   //!
+  TBranch        *b_METUnCor_MuonEnShiftedUp_Phi;   //!
+  TBranch        *b_METUnCor_MuonEnShiftedDown_PT;   //!
+  TBranch        *b_METUnCor_MuonEnShiftedDown_Phi;   //!
+  TBranch        *b_METUnCor_ElectronEnShiftedUp_PT;   //!
+  TBranch        *b_METUnCor_ElectronEnShiftedUp_Phi;   //!
+  TBranch        *b_METUnCor_ElectronEnShiftedDown_PT;   //!
+  TBranch        *b_METUnCor_ElectronEnShiftedDown_Phi;   //!
+  TBranch        *b_METUnCor_UnclusteredEnShiftedUp_PT;   //!
+  TBranch        *b_METUnCor_UnclusteredEnShiftedUp_Phi;   //!
+  TBranch        *b_METUnCor_UnclusteredEnShiftedDown_PT;   //!
+  TBranch        *b_METUnCor_UnclusteredEnShiftedDown_Phi;   //!
+  TBranch        *b_METUnCor_JetResShiftedUp_PT;   //!
+  TBranch        *b_METUnCor_JetResShiftedUp_Phi;   //!
+  TBranch        *b_METUnCor_JetResShiftedDown_PT;   //!
+  TBranch        *b_METUnCor_JetResShiftedDown_Phi;   //!
+  TBranch        *b_Muon;   //!
+  TBranch        *b_GenMuon;   //!
+  TBranch        *b_Muon_Charge;   //!
+  TBranch        *b_Muon_Count;   //!
+  TBranch        *b_Muon_PFIsodBeta03;   //!
+  TBranch        *b_Muon_PFIsodBeta04;   //!
+  TBranch        *b_Muon_isHighPt;   //!
+  TBranch        *b_Muon_isLoose;   //!
+  TBranch        *b_Muon_isMedium;   //!
+  TBranch        *b_Muon_isMedium2016;   //!
+  TBranch        *b_Muon_isSoft;   //!
+  TBranch        *b_Muon_isTight;   //!
+  TBranch        *b_Muon_pdgId;   //!
+  TBranch        *b_Muon_rand1;   //!
+  TBranch        *b_Muon_rand2;   //!
+  TBranch        *b_Muon_relIso03;   //!
+  TBranch        *b_Muon_relIso04;   //!
+  TBranch        *b_Muon_trackerLayers;   //!
+  TBranch        *b_PDFWeight_BjorkenX1;   //!
+  TBranch        *b_PDFWeight_BjorkenX2;   //!
+  TBranch        *b_PDFWeight_Cent;   //!
+  TBranch        *b_PDFWeight_Cent_Down;   //!
+  TBranch        *b_PDFWeight_Cent_Up;   //!
+  TBranch        *b_PDFWeight_Id1;   //!
+  TBranch        *b_PDFWeight_Id2;   //!
+  TBranch        *b_PDFWeight_PDF1;   //!
+  TBranch        *b_PDFWeight_PDF2;   //!
+  TBranch        *b_PDFWeight_Q;   //!
+  TBranch        *b_PDFWeight_Var1_Down;   //!
+  TBranch        *b_PDFWeight_Var1_Up;   //!
+  TBranch        *b_PDFWeight_Var2_Down;   //!
+  TBranch        *b_PDFWeight_Var2_Up;   //!
+  TBranch        *b_Photon;   //!
+  TBranch        *b_Photon_Count;   //!
+  TBranch        *b_Photon_SCB_Loose;   //!
+  TBranch        *b_Photon_SCB_Medium;   //!
+  TBranch        *b_Photon_SCB_Tight;   //!
+  TBranch        *b_Photon_ChaHadIso;   //!
+  TBranch        *b_Photon_NeuHadIso;   //!
+  TBranch        *b_Photon_PhoIso;   //!
+  TBranch        *b_Photon_WorstChargedIso;   //!
+  TBranch        *b_Photon_ChaHadEffArea;   //!
+  TBranch        *b_Photon_NeuHadEffArea;   //!
+  TBranch        *b_Photon_PhoHadEffArea;   //!
+  TBranch        *b_Photon_R9;   //!
+  TBranch        *b_Photon_HoverE;   //!
+  TBranch        *b_Photon_SuperCluster_Eta;   //!
+  TBranch        *b_Photon_SuperCluster_Phi;   //!
+  TBranch        *b_Photon_SuperCluster_EtaWidth;   //!
+  TBranch        *b_Photon_SuperCluster_PhiWidth;   //!
+  TBranch        *b_Photon_SuperCluster_Energy;   //!
+  TBranch        *b_Photon_SuperCluster_RawEnergy;   //!
+  TBranch        *b_Photon_ElectronVeto;   //!
+  TBranch        *b_Photon_Full5x5_SigmaIetaIeta;   //!
+  TBranch        *b_Photon_MVANonTrig_Tight;   //!
+  TBranch        *b_PV_Count;   //!
+  TBranch        *b_PileUp_Count_Interaction;   //!
+  TBranch        *b_PileUp_Count_Intime;   //!
+  TBranch        *b_Rho;   //!
+  TBranch        *b_Trigger_Name;   //!
+  TBranch        *b_Trigger_PreScale;   //!
+  TBranch        *b_Trigger_isError;   //!
+  TBranch        *b_Trigger_isPass;   //!
+  TBranch        *b_Trigger_isRun;   //!
+  TBranch        *b_Vertex_SumPtSquare;   //!
+  TBranch        *b_Vertex_X;   //!
+  TBranch        *b_Vertex_X_Error;   //!
+  TBranch        *b_Vertex_Y;   //!
+  TBranch        *b_Vertex_Y_Error;   //!
+  TBranch        *b_Vertex_Z;   //!
+  TBranch        *b_Vertex_Z_Error;   //!
+
+  SSBTree(TTree *tree=0);
+  virtual ~SSBTree();
+  virtual Int_t    Cut(Long64_t entry);
+  virtual Int_t    GetEntry(Long64_t entry);
+  virtual Long64_t LoadTree(Long64_t entry);
+  virtual void     Init(TTree *tree);
+  virtual void     Loop();
+  virtual Bool_t   Notify();
+  virtual void     Show(Long64_t entry = -1);
 };
 
 #endif
