@@ -10,6 +10,7 @@
 #include <string>
 #include <vector>
 #include <ctime>
+#include <sstream>
 
 #include <TROOT.h>
 #include <TUnixSystem.h>
@@ -39,7 +40,7 @@ int main(int argc, char **argv)
       printf("1. Input filelist\n");
       printf("2. Output file\n");
       printf("3. GenLoop On or Off\n");
-/*      printf("4. Muon Candidate Eta Cut On or Off\n");
+/*    printf("4. Muon Candidate Eta Cut On or Off\n");
       printf("5. Muon Candidate Eta Cut \n");
       printf("6. Charge Opposite Sign On or Off\n");
       printf("7. Dimuon Mass Cut On or Off\n");
@@ -57,15 +58,40 @@ int main(int argc, char **argv)
    //cout << "argc: " << argc << endl;
 
    char *flist = argv[1];
-   printf("Input filelist = %s\n",flist);
+   printf("INPUT - Input filelist = %s\n",flist);
 
    char *outname = argv[2];
-   printf("Output file name = %s\n",outname);
+   printf("INPUT - Output file name = %s\n",outname);
 
    int genLoop_on = atoi(argv[3]);
-   printf("Turn On or Off GenLoop : %d\n", genLoop_on);
-   cout << "dkdkdk" << genLoop_on << endl;
+   printf("INPUT - Turn On or Off GenLoop : %d\n", genLoop_on);
+
+   std::stringstream isDataBool(argv[4]);
+   bool isData_;
+   isDataBool >> std::boolalpha >> isData_;
+   std::cout << "INPUT - is Data? : " << isData_ << std::endl;
+
+   std::string processName_ = argv[5];
+   std::cout << "INPUT - Process Name : " << processName_ << std::endl;
    
+   std::stringstream isRoccorBool(argv[6]);
+   bool roccor_enabled_;
+   isRoccorBool >> std::boolalpha >> roccor_enabled_;
+   std::cout << "INPUT - Using Roccor? : " << roccor_enabled_ << std::endl;
+
+   std::stringstream isIDISOBool(argv[7]);
+   bool idiso_enabled_;
+   isIDISOBool >> std::boolalpha >> idiso_enabled_;
+   std::cout << "INPUT - Using IDISO? : " << idiso_enabled_ << std::endl;
+
+   std::stringstream isTRIGGBool(argv[8]);
+   bool trigg_enabled_;
+   isTRIGGBool >> std::boolalpha >> trigg_enabled_;
+   std::cout << "INPUT - Using TRIGG? : " << trigg_enabled_ << std::endl;
+
+   int massCut = atoi(argv[9]);
+   std::cout << "Mass cut : " << massCut << std::endl;
+
 //   char *logfile = argv[4];
 //   printf("Output Log File Name = %s.txt\n",logfile);
 /*   Bool_t trigger_pass_on =false;
@@ -114,7 +140,7 @@ int main(int argc, char **argv)
    
    while (fscanf(filelist, "%s", filename) != EOF)
    {
-      cout << "adding: " << filename << endl;
+      // cout << "adding: " << filename << endl;
       ch->Add(filename, 0);
       entries_pertree.push_back(ch->GetEntries());
    }
@@ -132,13 +158,14 @@ int main(int argc, char **argv)
    //cout <<"ssibal " << gDirectory->GetPath() << endl;
    //TTree* tree = (TTree*)gDirectory->Get("sync/MuID");
 
-   ssb_analysis *ssb = new ssb_analysis(ch);
+   ssb_analysis *ssb = new ssb_analysis(ch, isData_, processName_, roccor_enabled_, idiso_enabled_, trigg_enabled_, massCut);
+
    if ( genLoop_on == 1 ) 
    {
       
       ssb->SetOutputFileName(outname);
       ssb->Start( genLoop_on );
-      ssb->Loop( flist );
+      // ssb->Loop( flist );
       ssb->End();
 
    }

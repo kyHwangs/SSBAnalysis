@@ -13,8 +13,8 @@ SSBTREE_INPUTS   = ./analysis/SSBTree.C ./analysis/SSBTree.h
 
 LIBS            = $(ROOTLIBS)
 GLIBS           = $(ROOTGLIBS) -L/usr/X11R6/lib -lXext -lGenVector
-OBJS            = CommonTools.o SSBTree.o ssb_analysis.o main_ssb.o TextReader.o ssb_eff.o TtFullLepKinSolver.o CpViol.o BtagCalb.o LumiReWeight.o RoccoR.o utils.o analysisUtils.o KinematicReconstruction_LSroutines.o KinematicReconstruction_MeanSol.o KinematicReconstructionSolution.o KinematicReconstruction.o 
-INPUTS	   	= $(SSBTREE_INPUTS)  ./interface/ssb_analysis.hpp ./src/ssb_analysis.cpp main_ssb.cpp ./TextReader/TextReader.hpp ./TextReader/TextReader.cpp ./src/ssb_eff.cpp ./interface/ssb_eff.hpp ./kinsol/TtFullLepKinSolver.cpp ./kinsol/TtFullLepKinSolver.hpp ./interface/ssb_cpviol.hpp ./src/ssb_cpviol.cpp ./interface/BTagCalibrationStandalone.h ./src/BTagCalibrationStandalone.cc ./interface/LumiReWeighting.h ./src/LumiReWeighting.cc ./roccor.2016.v3/RoccoR.h ./roccor.2016.v3/RoccoR.cc ./KinSolv/utils.h ./KinSolv/utils.cc ./KinSolv/analysisUtils.h ./KinSolv/analysisUtils.cc ./KinSolv/KinematicReconstruction_LSroutines.h ./KinSolv/KinematicReconstruction_LSroutines.cc ./KinSolv/KinematicReconstruction_MeanSol.h ./KinSolv/KinematicReconstruction_MeanSol.cc ./KinSolv/KinematicReconstructionSolution.h ./KinSolv/KinematicReconstructionSolution.cc ./KinSolv/KinematicReconstruction.h ./KinSolv/KinematicReconstruction.cc
+OBJS            = CommonTools.o SSBTree.o ssb_analysis.o main_ssb.o TextReader.o ssb_eff.o TtFullLepKinSolver.o CpViol.o BtagCalb.o LumiReWeight.o RoccoR.o utils.o analysisUtils.o KinematicReconstruction_LSroutines.o KinematicReconstruction_MeanSol.o KinematicReconstructionSolution.o KinematicReconstruction.o EffTable.o
+INPUTS	   	= $(SSBTREE_INPUTS)  ./interface/ssb_analysis.hpp ./src/ssb_analysis.cpp main_ssb.cpp ./TextReader/TextReader.hpp ./TextReader/TextReader.cpp ./src/ssb_eff.cpp ./interface/ssb_eff.hpp ./kinsol/TtFullLepKinSolver.cpp ./kinsol/TtFullLepKinSolver.hpp ./interface/ssb_cpviol.hpp ./src/ssb_cpviol.cpp ./interface/BTagCalibrationStandalone.h ./src/BTagCalibrationStandalone.cc ./interface/LumiReWeighting.h ./src/LumiReWeighting.cc ./interface/EffTable.hpp ./src/EffTable.cpp ./roccor.2016.v3/RoccoR.h ./roccor.2016.v3/RoccoR.cc ./KinSolv/utils.h ./KinSolv/utils.cc ./KinSolv/analysisUtils.h ./KinSolv/analysisUtils.cc ./KinSolv/KinematicReconstruction_LSroutines.h ./KinSolv/KinematicReconstruction_LSroutines.cc ./KinSolv/KinematicReconstruction_MeanSol.h ./KinSolv/KinematicReconstruction_MeanSol.cc ./KinSolv/KinematicReconstructionSolution.h ./KinSolv/KinematicReconstructionSolution.cc ./KinSolv/KinematicReconstruction.h ./KinSolv/KinematicReconstruction.cc
 all: $(OBJS) 															
 	$(CC) $(OPT) $(LDFLAGS) -o $(PROGRAM) -g $(OBJS) $(LIBS)
 
@@ -36,6 +36,9 @@ TextReader.o: ./TextReader/TextReader.hpp ./TextReader/TextReader.cpp
 
 ssb_eff.o: ./interface/ssb_eff.hpp ./src/ssb_eff.cpp
 	$(CC) $(CXXFLAGS) -c ./src/ssb_eff.cpp
+
+EffTable.o: ./interface/EffTable.hpp ./src/EffTable.cpp
+	$(CC) $(CXXFLAGS) -c ./src/EffTable.cpp
 
 TtFullLepKinSolver.o: ./kinsol/TtFullLepKinSolver.hpp ./kinsol/TtFullLepKinSolver.cpp
 	$(CC) $(CXXFLAGS) -c ./kinsol/TtFullLepKinSolver.cpp
