@@ -52,6 +52,7 @@ public:
   virtual void Loop(char *logfile);
   void Start(int genLoopon);
   void End();
+  double GetLHEmass();
 
   // user define functions
   void SetOutputFileName(char *outname);
@@ -68,18 +69,128 @@ public:
   // double GetIdisoSF(double pT, double eta);
   // double GetTriggerSF(double pT1, double eta1, double pt2, double eta2);
 
+
+  // TBranch        *b_Muon_isPF;
+  // TBranch        *b_Muon_isGlobal;
+  // TBranch        *b_Muon_isTracker;
+
+  // TBranch        *b_Muon_ValidTrackHitFraction;
+  // TBranch        *b_Muon_GlobalTrackChi2;
+  // TBranch        *b_Muon_TrackerSTAPositionMatch;
+  // TBranch        *b_Muon_TrackKink;
+  // TBranch        *b_Muon_TrackExist;
+  // TBranch        *b_Muon_SegmentCompatibility;
+
+  // TBranch        *b_Muon_GlobalMuonTrackChamberHit;
+  // TBranch        *b_Muon_TunePGlobalMuonTrackChamberHit;
+  // TBranch        *b_Muon_TunePpTError;
+  // TBranch        *b_Muon_TunePpT;
+  // TBranch        *b_Muon_StationsHasSegments;
+
+  // TBranch        *b_Muon_dxy;
+  // TBranch        *b_Muon_dB;
+  // TBranch        *b_Muon_dz;
+  // TBranch        *b_Muon_PixelHit;
+  // TBranch        *b_Muon_TrackLayerWithHit;
+  
+  // ssbtree->Branch("Muon_isPF", &VectorBox_Bool["Muon_isPF"]);
+  // ssbtree->Branch("Muon_isGlobal", &VectorBox_Bool["Muon_isGlobal"]);
+  // ssbtree->Branch("Muon_isTracker", &VectorBox_Bool["Muon_isTracker"]);
+
+  // ssbtree->Branch("Muon_ValidTrackHitFraction", &VectorBox_Double["Muon_ValidTrackHitFraction"]);
+  // ssbtree->Branch("Muon_GlobalTrackChi2", &VectorBox_Double["Muon_GlobalTrackChi2"]);
+  // ssbtree->Branch("Muon_TrackerSTAPositionMatch", &VectorBox_Double["Muon_TrackerSTAPositionMatch"]);
+  // ssbtree->Branch("Muon_TrackKink", &VectorBox_Double["Muon_TrackKink"]);
+  // ssbtree->Branch("Muon_TrackExist", &VectorBox_Bool["Muon_TrackExist"]);
+  // ssbtree->Branch("Muon_SegmentCompatibility", &VectorBox_Double["Muon_SegmentCompatibility"]);
+
+  // ssbtree->Branch("Muon_GlobalMuonTrackChamberHit", &VectorBox_Double["Muon_GlobalMuonTrackChamberHit"]);
+  // ssbtree->Branch("Muon_TunePGlobalMuonTrackChamberHit", &VectorBox_Double["Muon_TunePGlobalMuonTrackChamberHit"]);
+  // ssbtree->Branch("Muon_TunePpTError", &VectorBox_Double["Muon_TunePpTError"]);
+  // ssbtree->Branch("Muon_TunePpT", &VectorBox_Double["Muon_TunePpT"]);
+  // ssbtree->Branch("Muon_StationsHasSegments", &VectorBox_Double["Muon_StationsHasSegments"]);
+
+  // ssbtree->Branch("Muon_dxy", &VectorBox_Double["Muon_dxy"]);
+  // ssbtree->Branch("Muon_dB", &VectorBox_Double["Muon_dB"]);
+  // ssbtree->Branch("Muon_dz", &VectorBox_Double["Muon_dz"]);
+  // ssbtree->Branch("Muon_PixelHit", &VectorBox_Double["Muon_PixelHit"]);
+  // ssbtree->Branch("Muon_TrackLayerWithHit", &VectorBox_Double["Muon_TrackLayerWithHit"]);
+
   struct stdMUON {
     TLorentzVector v;
     TLorentzVector _v;
     int charge;
     bool id;
     float iso;
+
+    bool isPF;
+    bool isGlobal;
+    bool isTracker;
+
+    double ValidTrackHitFraction;
+    double GlobalTrackChi2;
+    double TrackerSTAPositionMatch;
+    double TrackKink;
+    bool TrackExist;
+
+    double SegmentCompatibility;
+    double GlobalMuonTrackChamberHit;
+    double TunePGlobalMuonTrackChamberHit;
+    double TunePpTError;
+    double TunePpT;
+
+    double StationsHasSegments;
+    double dxy;
+    double dB;
+    double dz;
+    double PixelHit;
+    double TrackLayerWithHit;
+
     int nTrackLayer;
 
     stdMUON(TLorentzVector v_, int charge_, bool id_, float iso_,
+            bool isPF_,
+            bool isGlobal_,
+            bool isTracker_,
+            double ValidTrackHitFraction_,
+            double GlobalTrackChi2_,
+            double TrackerSTAPositionMatch_,
+            double TrackKink_,
+            bool TrackExist_,
+            double SegmentCompatibility_,
+            double GlobalMuonTrackChamberHit_,
+            double TunePGlobalMuonTrackChamberHit_,
+            double TunePpTError_,
+            double TunePpT_,
+            double StationsHasSegments_,
+            double dxy_,
+            double dB_,
+            double dz_,
+            double PixelHit_,
+            double TrackLayerWithHit_,
             int nTrackLayer_ = 0)
         : v(v_), _v(v_), charge(charge_), id(id_), iso(iso_),
-          nTrackLayer(nTrackLayer_) {}
+          isPF(isPF_),
+          isGlobal(isGlobal_),
+          isTracker(isTracker_),
+          ValidTrackHitFraction(ValidTrackHitFraction_),
+          GlobalTrackChi2(GlobalTrackChi2_),
+          TrackerSTAPositionMatch(TrackerSTAPositionMatch_),
+          TrackKink(TrackKink_),
+          TrackExist(TrackExist_),
+          SegmentCompatibility(SegmentCompatibility_),
+          GlobalMuonTrackChamberHit(GlobalMuonTrackChamberHit_),
+          TunePGlobalMuonTrackChamberHit(TunePGlobalMuonTrackChamberHit_),
+          TunePpTError(TunePpTError_),
+          TunePpT(TunePpT_),
+          StationsHasSegments(StationsHasSegments_),
+          dxy(dxy_),
+          dB(dB_),
+          dz(dz_),
+          PixelHit(PixelHit_),
+          TrackLayerWithHit(TrackLayerWithHit_),
+          nTrackLayer(nTrackLayer_)
+          {}
 
     bool isPass() {
       return (v.Pt() > 10. && std::abs(v.Eta()) < 2.4 && id && iso < 0.15);
@@ -147,6 +258,11 @@ private:
 
 public:
   // declare histograms
+
+  TH1D *h_LHEDimuonMass;
+  TH1D *h_LHEnMuon;
+  TH1D *h_GenWeight;
+
   TH1D *h_JetPt;
   TH1D *h_JetEta;
   TH1D *h_JetPhi;
@@ -185,7 +301,26 @@ public:
   TH1D *h_PileUp_Count_Interaction_after_corr;
   TH1D *h_PileUp_Count_Intime_after_corr;
 
+  TH1D *h_isGlobal_BeforeSel;
+  TH1D *h_Chi2GlobalMuonTrack_BeforeSel;
+  TH1D *h_NChamberGlobalMuonTrack_BeforeSel;
+  TH1D *h_NofMatchedStation_BeforeSel;
+  TH1D *h_dxy_BeforeSel;
+  TH1D *h_dB_BeforeSel;
+  TH1D *h_dxyOrdB_BeforeSel;
+  TH1D *h_dz_BeforeSel;
+  TH1D *h_NPixelHit_BeforeSel;
   TH1D *h_ValidInnerTrackHit_BeforeSel;
+
+  TH1D *h_isGlobal_AfterSel;
+  TH1D *h_Chi2GlobalMuonTrack_AfterSel;
+  TH1D *h_NChamberGlobalMuonTrack_AfterSel;
+  TH1D *h_NofMatchedStation_AfterSel;
+  TH1D *h_dxy_AfterSel;
+  TH1D *h_dB_AfterSel;
+  TH1D *h_dxyOrdB_AfterSel;
+  TH1D *h_dz_AfterSel;
+  TH1D *h_NPixelHit_AfterSel;
   TH1D *h_ValidInnerTrackHit_AfterSel;
 
   TH1D *h_JetPt_0J0B;
@@ -334,6 +469,7 @@ public:
   TH1D *h_dimuonMass_wide_mt1BJ;
   TH1D *h_dimuonPt_mt1BJ;
   TH1D *h_dimuonRap_mt1BJ;
+  
 };
 #endif
 
@@ -352,9 +488,20 @@ ssb_analysis::ssb_analysis(TTree *tree, bool fIsData_,
   Init(tree);
 
   // initializing HERE !
-  fPuReweighting = new edm::LumiReWeighting(
-      "./pileuInfo/MC_Moriond.root",
-      "./pileuInfo/PU_2016_69p2_36000_XSecCentral.root", "pileup", "pileup");
+  if (fProcessName_.find("UL2016APV_") != std::string::npos) {
+    fPuReweighting = new edm::LumiReWeighting("./pileuInfo/UL2016_MC.root", "./pileuInfo/UL2016APV_DATA.root", "pileup", "pileup");
+    std::cout << "MC PU : ./pileuInfo/UL2016_MC.root" << std::endl;
+    std::cout << "DATA PU : ./pileuInfo/UL2016APV_DATA.root" << std::endl;
+
+  } else if (fProcessName_.find("UL2016_") != std::string::npos) {
+    fPuReweighting = new edm::LumiReWeighting("./pileuInfo/UL2016_MC.root", "./pileuInfo/UL2016_DATA.root", "pileup", "pileup");
+    std::cout << "MC PU : ./pileuInfo/UL2016_MC.root" << std::endl;
+    std::cout << "DATA PU : ./pileuInfo/UL2016_DATA.root" << std::endl;  
+
+  } else {
+    fPuReweighting = new edm::LumiReWeighting("./pileuInfo/UL2016_MC.root", "./pileuInfo/UL2016_DATA.root", "pileup", "pileup");
+  }
+
   fRoccoR = new RoccoR("./roccor.2016.v3/rcdata.2016.v3");
   fIDISO_SF = EffTable("./lepEff/EMPP/Run2016UL_IDISO_eta_pt.txt");
   fTRIG_SF = EffTable("./lepEff/EMPP/Run2016UL_TRIG_eta_pt.txt");

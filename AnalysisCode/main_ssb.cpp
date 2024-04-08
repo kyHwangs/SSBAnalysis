@@ -40,11 +40,12 @@ int main(int argc, char **argv)
       printf("1. Input filelist\n");
       printf("2. Output file\n");
       printf("3. GenLoop On or Off\n");
-/*    printf("4. Muon Candidate Eta Cut On or Off\n");
-      printf("5. Muon Candidate Eta Cut \n");
-      printf("6. Charge Opposite Sign On or Off\n");
-      printf("7. Dimuon Mass Cut On or Off\n");
-      printf("8. Dimuon Mass Cut\n");*/
+      printf("4. is Data?\n");
+      printf("5. Process name\n");
+      printf("6. Do Roccor?\n");
+      printf("7. Do ID ISO eff sf?\n");
+      printf("8. Do Trigger eff?\n");
+      printf("9. Dimuon mass cut\n");
       return 1;
    }
 

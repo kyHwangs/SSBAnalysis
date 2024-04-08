@@ -41,8 +41,8 @@ void ssb_analysis::Loop(char *logfile) {
   /// start event loop ///
   ////////////////////////
 
-  float globalWeight = 1;
-  float normSF = 1;
+  double globalWeight = 1;
+  double normSF = 1;
 
   // if (!fIsData) {
   //   normSF = GetNormalization();
@@ -66,19 +66,64 @@ void ssb_analysis::Loop(char *logfile) {
 
     nb = fChain->GetEntry(jentry);
     nbytes += nb;
+    __tot_evt++;
+    // std::cout << jentry << " " << Gen_EventWeight << std::endl;
 
     if (jentry % 10000 == 0)
       printf("Event %lld\n", jentry); //%lld supports Long64_t
 
-    __tot_evt++;
-    totalGenWeight += Gen_EventWeight;
+    std::vector<TLorentzVector> LHE_leptons;
+    for (int i = 0; i < LHE_particleID->size(); i++) {
+      // std::cout << jentry << " events  - " << i << " " << LHE_particleID->at(i) << " " << LHE_Status->at(i) << std::endl;
 
-    globalWeight = 1;
+      if (std::fabs(LHE_particleID->at(i)) == 13) {
+        TLorentzVector l;
+        l.SetPxPyPzE(LHE_Px->at(i), LHE_Py->at(i), LHE_Pz->at(i), LHE_E->at(i));
+        LHE_leptons.push_back(l);
+      }
+    }
+
+    int LHE_leptons_size = LHE_leptons.size();
+    double LHE_mass = 0;
+    
+    if ( LHE_leptons_size == 2 ) {
+      auto LHE_lepton_leading = LHE_leptons.at(0);
+      auto LHE_lepton_subleading = LHE_leptons.at(1);
+      auto LHE_dilepton = LHE_lepton_leading + LHE_lepton_subleading;
+
+      LHE_mass = LHE_dilepton.M();
+    }
+
+    // if (fProcessName.find("NNLO_inc") != std::string::npos && LHE_mass > 100.)
+    //   continue;
+
+    // totalGenWeight += Gen_EventWeight;
+    // globalWeight = Gen_EventWeight;
+
+    if (Gen_EventWeight < 0) globalWeight = -1;
+    else                     globalWeight = +1;
+
+    // if (LHE_mass <= 10.) 
+    //   std::cout << "LHE dimuon mass: " << jentry << " " << globalWeight << " " << LHE_mass << std::endl;
+
+    totalGenWeight += globalWeight;
+
+    FillHisto(h_GenWeight, globalWeight, 1.);
+
     // globalWeight *= normSF;
+
+    FillHisto(h_LHEnMuon, LHE_leptons_size, globalWeight);
+
+    if (LHE_leptons.size() != 2) {
+      FillHisto(h_LHEDimuonMass, 0., globalWeight);
+    } else {
+      FillHisto(h_LHEDimuonMass, LHE_mass, globalWeight);
+    }
 
     double puReweightFactor = GetPUweight(PileUp_Count_Intime);
     if (!fIsData)
       globalWeight *= puReweightFactor;
+
 
     ////////////////////////////////////////
     /// start Main Loop Function and Cut ///
@@ -148,17 +193,69 @@ void ssb_analysis::Loop(char *logfile) {
     if (!passed_filter)
       continue;
 
+    // vector<bool>    *Muon_isPF;
+    // vector<bool>    *Muon_isGlobal;
+    // vector<bool>    *Muon_isTracker;
+
+    // vector<double>  *Muon_ValidTrackHitFraction;
+    // vector<double>  *Muon_GlobalTrackChi2;
+    // vector<double>  *Muon_TrackerSTAPositionMatch;
+    // vector<double>  *Muon_TrackKink;
+    // vector<bool>    *Muon_TrackExist;
+    // vector<double>  *Muon_SegmentCompatibility;
+
+    // vector<double>  *Muon_GlobalMuonTrackChamberHit;
+    // vector<double>  *Muon_TunePGlobalMuonTrackChamberHit;
+    // vector<double>  *Muon_TunePpTError;
+    // vector<double>  *Muon_TunePpT;
+    // vector<double>  *Muon_StationsHasSegments;
+
+    // vector<double>  *Muon_dxy;
+    // vector<double>  *Muon_dB;
+    // vector<double>  *Muon_dz;
+    // vector<double>  *Muon_PixelHit;
+    // vector<double>  *Muon_TrackLayerWithHit;
+
+
     std::vector<stdMUON> recoMuon;
     recoMuon.reserve(Muon->GetEntries());
     for (int i = 0; i < Muon->GetEntries(); ++i)
       recoMuon.emplace_back(stdMUON(*((TLorentzVector *)Muon->At(i)),
                                     Muon_Charge->at(i), Muon_isTight->at(i),
                                     Muon_PFIsodBeta04->at(i),
+                                    Muon_isPF->at(i),
+                                    Muon_isGlobal->at(i),
+                                    Muon_isTracker->at(i),
+                                    Muon_ValidTrackHitFraction->at(i),
+                                    Muon_GlobalTrackChi2->at(i),
+                                    Muon_TrackerSTAPositionMatch->at(i),
+                                    Muon_TrackKink->at(i),
+                                    Muon_TrackExist->at(i),
+                                    Muon_SegmentCompatibility->at(i),
+                                    Muon_GlobalMuonTrackChamberHit->at(i),
+                                    Muon_TunePGlobalMuonTrackChamberHit->at(i),
+                                    Muon_TunePpTError->at(i),
+                                    Muon_TunePpT->at(i),
+                                    Muon_StationsHasSegments->at(i),
+                                    Muon_dxy->at(i),
+                                    Muon_dB->at(i),
+                                    Muon_dz->at(i),
+                                    Muon_PixelHit->at(i),
+                                    Muon_TrackLayerWithHit->at(i),
                                     Muon_trackerLayers->at(i)));
 
-    for (int i = 0; i < recoMuon.size(); i++)
-      FillHisto(h_ValidInnerTrackHit_BeforeSel, recoMuon.at(i).nTrackLayer,
-                globalWeight);
+    for (int i = 0; i < recoMuon.size(); i++) {
+      FillHisto(h_isGlobal_BeforeSel,                recoMuon.at(i).isGlobal, globalWeight);
+      FillHisto(h_Chi2GlobalMuonTrack_BeforeSel,     recoMuon.at(i).GlobalTrackChi2, globalWeight);
+      FillHisto(h_NChamberGlobalMuonTrack_BeforeSel, recoMuon.at(i).GlobalMuonTrackChamberHit, globalWeight);
+      FillHisto(h_NofMatchedStation_BeforeSel,       recoMuon.at(i).StationsHasSegments, globalWeight);
+      FillHisto(h_dxy_BeforeSel,                     recoMuon.at(i).dxy, globalWeight);
+      FillHisto(h_dB_AfterSel,                       recoMuon.at(i).dB, globalWeight);
+      FillHisto(h_dxyOrdB_AfterSel,                  (recoMuon.at(i).dxy < 0.2 || recoMuon.at(i).dB < 0.2), globalWeight);
+      FillHisto(h_dz_BeforeSel,                      recoMuon.at(i).dz, globalWeight);
+      FillHisto(h_NPixelHit_BeforeSel,               recoMuon.at(i).PixelHit, globalWeight);
+      FillHisto(h_ValidInnerTrackHit_BeforeSel,      recoMuon.at(i).TrackLayerWithHit, globalWeight);
+    }
 
     std::vector<TLorentzVector> genStdMuon;
     genStdMuon.reserve(GenMuon->GetEntries());
@@ -279,10 +376,42 @@ void ssb_analysis::Loop(char *logfile) {
       }
     }
 
-    FillHisto(h_ValidInnerTrackHit_BeforeSel,
-              setMuonsPassingCut.at(0).nTrackLayer, globalWeight);
-    FillHisto(h_ValidInnerTrackHit_AfterSel,
-              setMuonsPassingCut.at(idx_subleading).nTrackLayer, globalWeight);
+
+    std::vector<int> muonIndex = {0, idx_subleading};
+    for (int i = 0; i < 2; i++) {
+      if ( !(setMuonsPassingCut.at(muonIndex.at(i)).dxy < 0.2 || setMuonsPassingCut.at(muonIndex.at(i)).dB < 0.2) || setMuonsPassingCut.at(muonIndex.at(i)).dz > 0.5 )
+        std::cout << "MUON passing ID but suspecious : " 
+                  << setMuonsPassingCut.at(muonIndex.at(i)).v.Pt() << " "
+                  << setMuonsPassingCut.at(muonIndex.at(i)).v.Eta() << " "
+                  << setMuonsPassingCut.at(muonIndex.at(i)).v.Phi() << " "
+                  << (leadingMuon + subleadingMuon).M() << " "
+                  << setMuonsPassingCut.at(muonIndex.at(i)).dxy << " "
+                  << setMuonsPassingCut.at(muonIndex.at(i)).dB << " "
+                  << setMuonsPassingCut.at(muonIndex.at(i)).dz << std::endl;
+    }
+
+
+    FillHisto(h_isGlobal_AfterSel,                setMuonsPassingCut.at(0).isGlobal, globalWeight);
+    FillHisto(h_Chi2GlobalMuonTrack_AfterSel,     setMuonsPassingCut.at(0).GlobalTrackChi2, globalWeight);
+    FillHisto(h_NChamberGlobalMuonTrack_AfterSel, setMuonsPassingCut.at(0).GlobalMuonTrackChamberHit, globalWeight);
+    FillHisto(h_NofMatchedStation_AfterSel,       setMuonsPassingCut.at(0).StationsHasSegments, globalWeight);
+    FillHisto(h_dxy_AfterSel,                     setMuonsPassingCut.at(0).dxy, globalWeight);
+    FillHisto(h_dB_AfterSel,                      setMuonsPassingCut.at(0).dB, globalWeight);
+    FillHisto(h_dxyOrdB_AfterSel,                 (setMuonsPassingCut.at(0).dxy < 0.2 || setMuonsPassingCut.at(0).dB < 0.2), globalWeight);
+    FillHisto(h_dz_AfterSel,                      setMuonsPassingCut.at(0).dz, globalWeight);
+    FillHisto(h_NPixelHit_AfterSel,               setMuonsPassingCut.at(0).PixelHit, globalWeight);
+    FillHisto(h_ValidInnerTrackHit_AfterSel,      setMuonsPassingCut.at(0).TrackLayerWithHit, globalWeight);
+
+    FillHisto(h_isGlobal_AfterSel,                setMuonsPassingCut.at(idx_subleading).isGlobal, globalWeight);
+    FillHisto(h_Chi2GlobalMuonTrack_AfterSel,     setMuonsPassingCut.at(idx_subleading).GlobalTrackChi2, globalWeight);
+    FillHisto(h_NChamberGlobalMuonTrack_AfterSel, setMuonsPassingCut.at(idx_subleading).GlobalMuonTrackChamberHit, globalWeight);
+    FillHisto(h_NofMatchedStation_AfterSel,       setMuonsPassingCut.at(idx_subleading).StationsHasSegments, globalWeight);
+    FillHisto(h_dxy_AfterSel,                     setMuonsPassingCut.at(idx_subleading).dxy, globalWeight);
+    FillHisto(h_dB_AfterSel,                      setMuonsPassingCut.at(idx_subleading).dB, globalWeight);
+    FillHisto(h_dxyOrdB_AfterSel,                 (setMuonsPassingCut.at(idx_subleading).dxy < 0.2 || setMuonsPassingCut.at(idx_subleading).dB < 0.2), globalWeight);    
+    FillHisto(h_dz_AfterSel,                      setMuonsPassingCut.at(idx_subleading).dz, globalWeight);
+    FillHisto(h_NPixelHit_AfterSel,               setMuonsPassingCut.at(idx_subleading).PixelHit, globalWeight);
+    FillHisto(h_ValidInnerTrackHit_AfterSel,      setMuonsPassingCut.at(idx_subleading).TrackLayerWithHit, globalWeight);
 
     std::vector<stdELEC> recoElec;
     recoElec.reserve(Elec->GetEntries());
@@ -364,9 +493,9 @@ void ssb_analysis::Loop(char *logfile) {
     FillHisto(h_dimuonPt, diMuon.Pt(), globalWeight);
     FillHisto(h_dimuonRap, diMuon.Rapidity(), globalWeight);
 
-    FillHisto(h_PV_Count_before_corr, PV_Count, globalWeight);
-    FillHisto(h_PileUp_Count_Interaction_before_corr, PileUp_Count_Interaction, globalWeight);
-    FillHisto(h_PileUp_Count_Intime_before_corr, PileUp_Count_Intime, globalWeight);
+    FillHisto(h_PV_Count_before_corr, PV_Count, globalWeight / puReweightFactor);
+    FillHisto(h_PileUp_Count_Interaction_before_corr, PileUp_Count_Interaction, globalWeight / puReweightFactor);
+    FillHisto(h_PileUp_Count_Intime_before_corr, PileUp_Count_Intime, globalWeight / puReweightFactor);
 
     FillHisto(h_PV_Count_after_corr, PV_Count, globalWeight);
     FillHisto(h_PileUp_Count_Interaction_after_corr, PileUp_Count_Interaction, globalWeight);
@@ -589,6 +718,8 @@ void ssb_analysis::Loop(char *logfile) {
       }
     }
 
+
+
   } // event loop
 
   printf("Total processed number of events: %lld\n", __tot_evt);
@@ -616,9 +747,25 @@ void ssb_analysis::Start(int genLoopon) {
   DeclareHistos();
 }
 
+double ssb_analysis::GetLHEmass() {
+
+  // for (int i = 0; i < LHE_nParticle; i++) {
+  //   std::cout << "  - " << i << " " << LHE_particleID->at(i) << " " << LHE_Status->at(i) << std::endl;
+  // }
+
+  // std::cout << " " << std::endl;
+  // std::cout << " " << std::endl;
+
+  return 1;
+}
+
 void ssb_analysis::DeclareHistos() {
 
   // Test For Systematic All-in-One Code
+
+  h_LHEDimuonMass = new TH1D(Form("h_LHEDimuonMass"), Form("h_LHEDimuonMass"), 6000, 0., 6000.);
+  h_GenWeight = new TH1D(Form("h_GenWeight"), Form("h_GenWeight"), 20000, -10000., 10000.);
+  h_LHEnMuon = new TH1D(Form("h_LHEnMuon"), Form("h_LHEnMuon"), 10, 0., 10.);
 
   h_nJet_before =
       new TH1D(Form("h_nJet_before"), Form("nJet_before"), 20, 0., 20.);
@@ -719,15 +866,31 @@ void ssb_analysis::DeclareHistos() {
                Form("PileUp_Count_Intime"), 1000, 0., 100.);
   h_PileUp_Count_Intime_after_corr->Sumw2();
 
-  h_ValidInnerTrackHit_BeforeSel =
-      new TH1D(Form("h_ValidInnerTrackHit_BeforeSel"),
-               Form("ValidInnerTrackHit_BeforeSel"), 100, 0., 100.);
-  h_ValidInnerTrackHit_BeforeSel->Sumw2();
 
-  h_ValidInnerTrackHit_AfterSel =
-      new TH1D(Form("h_ValidInnerTrackHit_AfterSel"),
-               Form("ValidInnerTrackHit_AfterSel"), 100, 0., 100.);
-  h_ValidInnerTrackHit_AfterSel->Sumw2();
+  h_isGlobal_BeforeSel = new TH1D(Form("h_isGlobal_BeforeSel"), Form("h_isGlobal_BeforeSel"), 2, 0., 2.); h_isGlobal_BeforeSel->Sumw2();
+  h_Chi2GlobalMuonTrack_BeforeSel = new TH1D(Form("h_Chi2GlobalMuonTrack_BeforeSel"), Form("h_Chi2GlobalMuonTrack_BeforeSel"), 200, 0., 100.); h_Chi2GlobalMuonTrack_BeforeSel->Sumw2();
+  h_NChamberGlobalMuonTrack_BeforeSel = new TH1D(Form("h_NChamberGlobalMuonTrack_BeforeSel"), Form("h_NChamberGlobalMuonTrack_BeforeSel"), 100, 0., 100.); h_NChamberGlobalMuonTrack_BeforeSel->Sumw2();
+  h_NofMatchedStation_BeforeSel = new TH1D(Form("h_NofMatchedStation_BeforeSel"), Form("h_NofMatchedStation_BeforeSel"), 100, 0., 100.); h_NofMatchedStation_BeforeSel->Sumw2();
+  h_dxy_BeforeSel = new TH1D(Form("h_dxy_BeforeSel"), Form("h_dxy_BeforeSel"), 210, 0., 21.); h_dxy_BeforeSel->Sumw2();
+  h_dB_BeforeSel = new TH1D(Form("h_dB_BeforeSel"), Form("h_dB_BeforeSel"), 210, 0., 21.); h_dB_BeforeSel->Sumw2();
+  h_dxyOrdB_BeforeSel = new TH1D(Form("h_dxyOrdB_BeforeSel"), Form("h_dxyOrdB_BeforeSel"), 2, 0., 2.); h_dxyOrdB_BeforeSel->Sumw2();
+  h_dz_BeforeSel = new TH1D(Form("h_dz_BeforeSel"), Form("h_dz_BeforeSel"), 210, 0., 21.); h_dz_BeforeSel->Sumw2();
+  h_NPixelHit_BeforeSel = new TH1D(Form("h_NPixelHit_BeforeSel"), Form("h_NPixelHit_BeforeSel"), 100, 0., 100.); h_NPixelHit_BeforeSel->Sumw2();
+  h_ValidInnerTrackHit_BeforeSel = new TH1D(Form("h_ValidInnerTrackHit_BeforeSel"), Form("h_ValidInnerTrackHit_BeforeSel"), 100, 0., 100.); h_ValidInnerTrackHit_BeforeSel->Sumw2();
+
+  h_isGlobal_AfterSel = new TH1D(Form("h_isGlobal_AfterSel"), Form("h_isGlobal_AfterSel"), 2, 0., 2.); h_isGlobal_AfterSel->Sumw2();
+  h_Chi2GlobalMuonTrack_AfterSel = new TH1D(Form("h_Chi2GlobalMuonTrack_AfterSel"), Form("h_Chi2GlobalMuonTrack_AfterSel"), 200, 0., 100.); h_Chi2GlobalMuonTrack_AfterSel->Sumw2();
+  h_NChamberGlobalMuonTrack_AfterSel = new TH1D(Form("h_NChamberGlobalMuonTrack_AfterSel"), Form("h_NChamberGlobalMuonTrack_AfterSel"), 100, 0., 100.); h_NChamberGlobalMuonTrack_AfterSel->Sumw2();
+  h_NofMatchedStation_AfterSel = new TH1D(Form("h_NofMatchedStation_AfterSel"), Form("h_NofMatchedStation_AfterSel"), 100, 0., 100.); h_NofMatchedStation_AfterSel->Sumw2();
+  h_dxy_AfterSel = new TH1D(Form("h_dxy_AfterSel"), Form("h_dxy_AfterSel"), 210, 0., 21.); h_dxy_AfterSel->Sumw2();
+  h_dB_AfterSel = new TH1D(Form("h_dB_AfterSel"), Form("h_dB_AfterSel"), 210, 0., 21.); h_dB_AfterSel->Sumw2();
+  h_dxyOrdB_AfterSel = new TH1D(Form("h_dxyOrdB_AfterSel"), Form("h_dxyOrdB_AfterSel"), 2, 0., 2.); h_dxyOrdB_AfterSel->Sumw2();  
+  h_dz_AfterSel = new TH1D(Form("h_dz_AfterSel"), Form("h_dz_AfterSel"), 210, 0., 21.); h_dz_AfterSel->Sumw2();
+  h_NPixelHit_AfterSel = new TH1D(Form("h_NPixelHit_AfterSel"), Form("h_NPixelHit_AfterSel"), 100, 0., 100.); h_NPixelHit_AfterSel->Sumw2();
+  h_ValidInnerTrackHit_AfterSel = new TH1D(Form("h_ValidInnerTrackHit_AfterSel"), Form("h_ValidInnerTrackHit_AfterSel"), 100, 0., 100.); h_ValidInnerTrackHit_AfterSel->Sumw2();
+
+
+
 
   h_JetPt_0J0B = new TH1D(Form("h_JetPt_0J0B"), Form("Jet_pT"), 1000, 0, 1000);
   h_JetPt_0J0B->Sumw2();
