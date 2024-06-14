@@ -94,14 +94,23 @@ void ssb_analysis::Loop(char *logfile) {
       LHE_mass = LHE_dilepton.M();
     }
 
-    // if (fProcessName.find("NNLO_inc") != std::string::npos && LHE_mass > 100.)
-    //   continue;
+    if (fProcessName.find("NNLO_inc") != std::string::npos && LHE_mass > 100.)
+      continue;
 
     // totalGenWeight += Gen_EventWeight;
     // globalWeight = Gen_EventWeight;
 
-    if (Gen_EventWeight < 0) globalWeight = -1;
-    else                     globalWeight = +1;
+    if fProcessName.find("NNLO") != std::string::npos() {
+      std::cout << "INCLUDING NNLO : gen weight set to +- 1" << std::endl;
+
+      if (Gen_EventWeight < 0) globalWeight = -1;
+      else                     globalWeight = +1;
+
+    } else {
+
+      globalWeight = Gen_EventWeight;
+
+    }
 
     // if (LHE_mass <= 10.) 
     //   std::cout << "LHE dimuon mass: " << jentry << " " << globalWeight << " " << LHE_mass << std::endl;
@@ -310,29 +319,32 @@ void ssb_analysis::Loop(char *logfile) {
       if (recoMuon.at(i).isPass())
         setMuonsPassingCut.push_back(recoMuon.at(i));
 
-    int pos = 0;
-    int neg = 0;
+    // int pos = 0;
+    // int neg = 0;
 
-    for (int i = 0; i < setMuonsPassingCut.size(); i++) {
-      if (setMuonsPassingCut.at(i).charge > 0.)
-        pos++;
-      else
-        neg++;
-    }
+    // for (int i = 0; i < setMuonsPassingCut.size(); i++) {
+    //   if (setMuonsPassingCut.at(i).charge > 0.)
+    //     pos++;
+    //   else
+    //     neg++;
+    // }
 
-    if (pos == 0 || neg == 0)
-      continue;
+    // if (pos == 0 || neg == 0)
+    //   continue;
 
     if (!(setMuonsPassingCut.at(0).v.Pt() > 25.))
       continue;
 
-    int idx_subleading = 0;
+    int idx_subleading = -1;
     for (int i = 1; i < setMuonsPassingCut.size(); i++) {
-      if (!(setMuonsPassingCut.at(0).v == setMuonsPassingCut.at(i).v)) {
+      if (setMuonsPassingCut.at(0).charge * setMuonsPassingCut.at(i).charge < 0) {
         idx_subleading = i;
         break;
       }
     }
+
+    if (idx_subleading == -1)
+      continue;
 
     TLorentzVector leadingMuon = setMuonsPassingCut.at(0).v;
     TLorentzVector subleadingMuon = setMuonsPassingCut.at(idx_subleading).v;

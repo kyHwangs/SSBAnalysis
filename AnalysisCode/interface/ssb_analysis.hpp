@@ -42,10 +42,15 @@ using namespace std;
 class ssb_analysis : public SSBTree {
 public:
   // declare functions
-  ssb_analysis(TTree *tree = 0, bool fIsData_ = 0,
-               std::string fProcessName_ = 0, bool fRoccor_enalbed_ = 0,
-               bool fIDISO_enalbed_ = 0, bool fTRIGG_enalbed_ = 0,
+  ssb_analysis(TTree *tree = 0, 
+               bool fIsData_ = 0,
+               std::string fEra_ = 0,
+               std::string fProcessName_ = 0, 
+               bool fRoccor_enalbed_ = 0,
+               bool fIDISO_enalbed_ = 0, 
+               bool fTRIGG_enalbed_ = 0,
                float fMassCut_ = 0);
+
   virtual ~ssb_analysis();
 
   // basic frame
@@ -242,6 +247,7 @@ private:
   TFile *fout;
 
   bool fIsData;
+  std::string fEra;
   std::string fProcessName;
   bool fRoccor_enalbed;
   bool fIDISO_enalbed;
@@ -475,37 +481,59 @@ public:
 
 #ifdef ssb_analysis_cxx
 
-ssb_analysis::ssb_analysis(TTree *tree, bool fIsData_,
-                           std::string fProcessName_, bool fRoccor_enalbed_,
-                           bool fIDISO_enalbed_, bool fTRIGG_enalbed_,
+ssb_analysis::ssb_analysis(TTree *tree, 
+                           bool fIsData_,
+                           std::string fEra_,
+                           std::string fProcessName_, 
+                           bool fRoccor_enalbed_,
+                           bool fIDISO_enalbed_, 
+                           bool fTRIGG_enalbed_,
                            float fMassCut_)
-    : fIsData(fIsData_), fProcessName(fProcessName_),
-      fRoccor_enalbed(fRoccor_enalbed_), fIDISO_enalbed(fIDISO_enalbed_),
-      fTRIGG_enalbed(fTRIGG_enalbed_), fMassCut(fMassCut_) {
+    : fIsData(fIsData_), 
+      fEra(fEra_),
+      fProcessName(fProcessName_),
+      fRoccor_enalbed(fRoccor_enalbed_), 
+      fIDISO_enalbed(fIDISO_enalbed_),
+      fTRIGG_enalbed(fTRIGG_enalbed_), 
+      fMassCut(fMassCut_) 
+{
   if (tree == 0) {
     printf("ERROR: Can't find any input tree.\n");
+  
   }
   Init(tree);
 
   // initializing HERE !
-  if (fProcessName_.find("UL2016APV_") != std::string::npos) {
-    fPuReweighting = new edm::LumiReWeighting("./pileuInfo/UL2016_MC.root", "./pileuInfo/UL2016APV_DATA.root", "pileup", "pileup");
-    std::cout << "MC PU : ./pileuInfo/UL2016_MC.root" << std::endl;
-    std::cout << "DATA PU : ./pileuInfo/UL2016APV_DATA.root" << std::endl;
 
-  } else if (fProcessName_.find("UL2016_") != std::string::npos) {
-    fPuReweighting = new edm::LumiReWeighting("./pileuInfo/UL2016_MC.root", "./pileuInfo/UL2016_DATA.root", "pileup", "pileup");
-    std::cout << "MC PU : ./pileuInfo/UL2016_MC.root" << std::endl;
-    std::cout << "DATA PU : ./pileuInfo/UL2016_DATA.root" << std::endl;  
+  if (fEra == "UL2016APV") {
+    fRoccoR = new RoccoR("./RoccoR/RoccoR2016aUL.txt");
+    fPuReweighting = new edm::LumiReWeighting("./pileuInfo/MC_2016.root", "./pileuInfo/PileupHistogram-goldenJSON-13tev-2016-preVFP-69200ub-99bins.root", "pileup", "pileup");
+    std::cout << "MC PU : ./pileuInfo/MC_2016.root" << std::endl;
+    std::cout << "DATA PU : ./pileuInfo/PileupHistogram-goldenJSON-13tev-2016-preVFP-69200ub-99bins.root" << std::endl;
+    std::cout << "Roccor : ./RoccoR/RoccoR2016aUL.txt" << std::endl;
 
-  } else {
-    fPuReweighting = new edm::LumiReWeighting("./pileuInfo/UL2016_MC.root", "./pileuInfo/UL2016_DATA.root", "pileup", "pileup");
-  }
+  } else if (fEra == "UL2016") {
+    fRoccoR = new RoccoR("./RoccoR/RoccoR2016bUL.txt");
+    fPuReweighting = new edm::LumiReWeighting("./pileuInfo/MC_2016.root", "./pileuInfo/PileupHistogram-goldenJSON-13tev-2016-postVFP-69200ub-99bins.root", "pileup", "pileup");
+    std::cout << "MC PU : ./pileuInfo/MC_2016.root" << std::endl;
+    std::cout << "DATA PU : ./pileuInfo/PileupHistogram-goldenJSON-13tev-2016-postVFP-69200ub-99bins.root" << std::endl;  
+    std::cout << "Roccor : ./RoccoR/RoccoR2016bUL.txt" << std::endl;
 
-  fRoccoR = new RoccoR("./roccor.2016.v3/rcdata.2016.v3");
-  fIDISO_SF = EffTable("./lepEff/EMPP/Run2016UL_IDISO_eta_pt.txt");
-  fTRIG_SF = EffTable("./lepEff/EMPP/Run2016UL_TRIG_eta_pt.txt");
-  fTracking_SF = EffTable("./lepEff/EMPP/Run2016_Tracking_eta.txt");
+  } else if (fEra == "UL2017") {
+    fRoccoR = new RoccoR("./RoccoR/RoccoR2017UL.txt");    
+    fPuReweighting = new edm::LumiReWeighting("./pileuInfo/MC_2017.root", "./pileuInfo/PileupHistogram-goldenJSON-13tev-2017-69200ub-99bins.root", "pileup", "pileup");
+    std::cout << "MC PU : ./pileuInfo/MC_2017.root" << std::endl;
+    std::cout << "DATA PU : ./pileuInfo/PileupHistogram-goldenJSON-13tev-2017-69200ub-99bins.root" << std::endl;  
+    std::cout << "Roccor : ./RoccoR/RoccoR2017UL.txt" << std::endl;
+
+  } else
+    fRoccoR = new RoccoR("./RoccoR/RoccoR2018UL.txt");
+    fPuReweighting = new edm::LumiReWeighting("./pileuInfo/MC_2018.root", "./pileuInfo/PileupHistogram-goldenJSON-13tev-2018-69200ub-99bins.root", "pileup", "pileup");
+    std::cout << "MC PU : ./pileuInfo/MC_2018.root" << std::endl;
+    std::cout << "DATA PU : ./pileuInfo/PileupHistogram-goldenJSON-13tev-2018-69200ub-99bins.root" << std::endl;  
+    std::cout << "Roccor : ./RoccoR/RoccoR2018UL.txt" << std::endl;
+
+  }  
 }
 
 double ssb_analysis::GetNormalization() {
