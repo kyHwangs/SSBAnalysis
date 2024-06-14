@@ -41,11 +41,12 @@ int main(int argc, char **argv)
       printf("2. Output file\n");
       printf("3. GenLoop On or Off\n");
       printf("4. is Data?\n");
-      printf("5. Process name\n");
-      printf("6. Do Roccor?\n");
-      printf("7. Do ID ISO eff sf?\n");
-      printf("8. Do Trigger eff?\n");
-      printf("9. Dimuon mass cut\n");
+      printf("5. era?\n");
+      printf("6. Process name\n");
+      printf("7. Do Roccor?\n");
+      printf("8. Do ID ISO eff sf?\n");
+      printf("9. Do Trigger eff?\n");
+      printf("10. Dimuon mass cut\n");
       return 1;
    }
 
@@ -72,25 +73,28 @@ int main(int argc, char **argv)
    isDataBool >> std::boolalpha >> isData_;
    std::cout << "INPUT - is Data? : " << isData_ << std::endl;
 
-   std::string processName_ = argv[5];
+   std::string era_ = argv[5];
+   std::cout << "INPUT - Era : " << era_ << std::endl;
+
+   std::string processName_ = argv[6];
    std::cout << "INPUT - Process Name : " << processName_ << std::endl;
    
-   std::stringstream isRoccorBool(argv[6]);
+   std::stringstream isRoccorBool(argv[7]);
    bool roccor_enabled_;
    isRoccorBool >> std::boolalpha >> roccor_enabled_;
    std::cout << "INPUT - Using Roccor? : " << roccor_enabled_ << std::endl;
 
-   std::stringstream isIDISOBool(argv[7]);
+   std::stringstream isIDISOBool(argv[8]);
    bool idiso_enabled_;
    isIDISOBool >> std::boolalpha >> idiso_enabled_;
    std::cout << "INPUT - Using IDISO? : " << idiso_enabled_ << std::endl;
 
-   std::stringstream isTRIGGBool(argv[8]);
+   std::stringstream isTRIGGBool(argv[9]);
    bool trigg_enabled_;
    isTRIGGBool >> std::boolalpha >> trigg_enabled_;
    std::cout << "INPUT - Using TRIGG? : " << trigg_enabled_ << std::endl;
 
-   int massCut = atoi(argv[9]);
+   int massCut = atoi(argv[10]);
    std::cout << "Mass cut : " << massCut << std::endl;
 
 //   char *logfile = argv[4];
@@ -159,7 +163,7 @@ int main(int argc, char **argv)
    //cout <<"ssibal " << gDirectory->GetPath() << endl;
    //TTree* tree = (TTree*)gDirectory->Get("sync/MuID");
 
-   ssb_analysis *ssb = new ssb_analysis(ch, isData_, processName_, roccor_enabled_, idiso_enabled_, trigg_enabled_, massCut);
+   ssb_analysis *ssb = new ssb_analysis(ch, isData_, era_, processName_, roccor_enabled_, idiso_enabled_, trigg_enabled_, massCut);
 
    if ( genLoop_on == 1 ) 
    {

@@ -1,13 +1,8 @@
 #!/bin/tcsh
 
-#set inputlists = ("Data_DoubleMuon_Run2016G_1")
-#set inputlists = ("TTJets_Signal_GluoneMoveCRTune_erdON_1")
-#set inputlists = ("TTJets_others_GluoneMoveCRTune_erdON_1")
-#set inputlists = ("WJetsToLNu_1")
-set inputlists = ("TTJets_Signal_1")
-#set inputlists = ("DYJetsToLL_M_10To50_1")
-foreach i ( $inputlists )
-   mkdir -p output
-   ./ssb_analysis ${i}.list ${i}.root 0
 
-end
+mkdir -p output
+./ssb_analysis sample/UL2016APV_NNLO_inc.list UL2016APV_NNLO_inc_sample.root 0 false UL2016APV UL2016APV_NNLO_inc false false false 10 
+./ssb_analysis sample/UL2016_NNLO_inc.list UL2016APV_NNLO_inc_sample.root 0 false UL2016 UL2016_NNLO_inc false false false 10 
+./ssb_analysis sample/UL2017_NNLO_inc.list UL2016APV_NNLO_inc_sample.root 0 false UL2017 UL2017_NNLO_inc false false false 10 
+./ssb_analysis sample/UL2018_NNLO_inc.list UL2016APV_NNLO_inc_sample.root 0 false UL2018 UL2018_NNLO_inc false false false 10 

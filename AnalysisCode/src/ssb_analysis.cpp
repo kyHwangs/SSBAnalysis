@@ -100,7 +100,7 @@ void ssb_analysis::Loop(char *logfile) {
     // totalGenWeight += Gen_EventWeight;
     // globalWeight = Gen_EventWeight;
 
-    if fProcessName.find("NNLO") != std::string::npos() {
+    if (fProcessName.find("NNLO") != std::string::npos) {
       std::cout << "INCLUDING NNLO : gen weight set to +- 1" << std::endl;
 
       if (Gen_EventWeight < 0) globalWeight = -1;

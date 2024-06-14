@@ -31,7 +31,7 @@
 #include "./../interface/ssb_eff.hpp"
 #include "./../kinsol/TtFullLepKinSolver.hpp"
 
-#include "./../roccor.2016.v3/RoccoR.h"
+#include "./../RoccoR/RoccoR.h"
 
 #include "./../KinSolv/KinematicReconstruction.h"
 #include "./../KinSolv/KinematicReconstructionSolution.h"
@@ -526,13 +526,12 @@ ssb_analysis::ssb_analysis(TTree *tree,
     std::cout << "DATA PU : ./pileuInfo/PileupHistogram-goldenJSON-13tev-2017-69200ub-99bins.root" << std::endl;  
     std::cout << "Roccor : ./RoccoR/RoccoR2017UL.txt" << std::endl;
 
-  } else
+  } else {
     fRoccoR = new RoccoR("./RoccoR/RoccoR2018UL.txt");
     fPuReweighting = new edm::LumiReWeighting("./pileuInfo/MC_2018.root", "./pileuInfo/PileupHistogram-goldenJSON-13tev-2018-69200ub-99bins.root", "pileup", "pileup");
     std::cout << "MC PU : ./pileuInfo/MC_2018.root" << std::endl;
     std::cout << "DATA PU : ./pileuInfo/PileupHistogram-goldenJSON-13tev-2018-69200ub-99bins.root" << std::endl;  
     std::cout << "Roccor : ./RoccoR/RoccoR2018UL.txt" << std::endl;
-
   }  
 }
 
