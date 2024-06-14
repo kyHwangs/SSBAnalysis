@@ -69,8 +69,7 @@ void ssb_analysis::Loop(char *logfile) {
     __tot_evt++;
     // std::cout << jentry << " " << Gen_EventWeight << std::endl;
 
-    if (jentry % 10000 == 0)
-      printf("Event %lld\n", jentry); //%lld supports Long64_t
+    if (jentry % 10000 == 0) printf("Event %lld\n", jentry); //%lld supports Long64_t
 
     std::vector<TLorentzVector> LHE_leptons;
     for (int i = 0; i < LHE_particleID->size(); i++) {
@@ -97,12 +96,7 @@ void ssb_analysis::Loop(char *logfile) {
     if (fProcessName.find("NNLO_inc") != std::string::npos && LHE_mass > 100.)
       continue;
 
-    // totalGenWeight += Gen_EventWeight;
-    // globalWeight = Gen_EventWeight;
-
     if (fProcessName.find("NNLO") != std::string::npos) {
-      std::cout << "INCLUDING NNLO : gen weight set to +- 1" << std::endl;
-
       if (Gen_EventWeight < 0) globalWeight = -1;
       else                     globalWeight = +1;
 
@@ -132,6 +126,7 @@ void ssb_analysis::Loop(char *logfile) {
     double puReweightFactor = GetPUweight(PileUp_Count_Intime);
     if (!fIsData)
       globalWeight *= puReweightFactor;
+
 
 
     ////////////////////////////////////////
@@ -266,6 +261,8 @@ void ssb_analysis::Loop(char *logfile) {
       FillHisto(h_ValidInnerTrackHit_BeforeSel,      recoMuon.at(i).TrackLayerWithHit, globalWeight);
     }
 
+
+
     std::vector<TLorentzVector> genStdMuon;
     genStdMuon.reserve(GenMuon->GetEntries());
     for (int i = 0; i < GenMuon->GetEntries(); ++i)
@@ -309,6 +306,7 @@ void ssb_analysis::Loop(char *logfile) {
       }
     }
 
+
     std::sort(recoMuon.begin(), recoMuon.end(),
               [](const stdMUON &lhs, const stdMUON &rhs) {
                 return lhs.v.Pt() > rhs.v.Pt();
@@ -319,18 +317,8 @@ void ssb_analysis::Loop(char *logfile) {
       if (recoMuon.at(i).isPass())
         setMuonsPassingCut.push_back(recoMuon.at(i));
 
-    // int pos = 0;
-    // int neg = 0;
-
-    // for (int i = 0; i < setMuonsPassingCut.size(); i++) {
-    //   if (setMuonsPassingCut.at(i).charge > 0.)
-    //     pos++;
-    //   else
-    //     neg++;
-    // }
-
-    // if (pos == 0 || neg == 0)
-    //   continue;
+    if (setMuonsPassingCut.size() < 2)
+      continue;
 
     if (!(setMuonsPassingCut.at(0).v.Pt() > 25.))
       continue;
@@ -348,6 +336,7 @@ void ssb_analysis::Loop(char *logfile) {
 
     TLorentzVector leadingMuon = setMuonsPassingCut.at(0).v;
     TLorentzVector subleadingMuon = setMuonsPassingCut.at(idx_subleading).v;
+
 
     if (!((leadingMuon + subleadingMuon).M() > fMassCut))
       continue;
@@ -387,21 +376,6 @@ void ssb_analysis::Loop(char *logfile) {
         //           << std::endl;
       }
     }
-
-
-    std::vector<int> muonIndex = {0, idx_subleading};
-    for (int i = 0; i < 2; i++) {
-      if ( !(setMuonsPassingCut.at(muonIndex.at(i)).dxy < 0.2 || setMuonsPassingCut.at(muonIndex.at(i)).dB < 0.2) || setMuonsPassingCut.at(muonIndex.at(i)).dz > 0.5 )
-        std::cout << "MUON passing ID but suspecious : " 
-                  << setMuonsPassingCut.at(muonIndex.at(i)).v.Pt() << " "
-                  << setMuonsPassingCut.at(muonIndex.at(i)).v.Eta() << " "
-                  << setMuonsPassingCut.at(muonIndex.at(i)).v.Phi() << " "
-                  << (leadingMuon + subleadingMuon).M() << " "
-                  << setMuonsPassingCut.at(muonIndex.at(i)).dxy << " "
-                  << setMuonsPassingCut.at(muonIndex.at(i)).dB << " "
-                  << setMuonsPassingCut.at(muonIndex.at(i)).dz << std::endl;
-    }
-
 
     FillHisto(h_isGlobal_AfterSel,                setMuonsPassingCut.at(0).isGlobal, globalWeight);
     FillHisto(h_Chi2GlobalMuonTrack_AfterSel,     setMuonsPassingCut.at(0).GlobalTrackChi2, globalWeight);
