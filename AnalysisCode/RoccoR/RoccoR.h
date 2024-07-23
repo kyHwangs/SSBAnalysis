@@ -122,7 +122,6 @@ struct RocRes{
 class RoccoR{
 
     private:
-	enum TYPE{MC, DT};
 	enum TVAR{Default, Replica, Symhes};
 
 	static const double MPHI; 
@@ -132,7 +131,15 @@ class RoccoR{
 	double DPHI;
 	std::vector<double> etabin;
 
-	struct CorParams{double M; double A;};
+	struct CorParams{
+	    double M; 
+	    double A;
+	    double X;
+	    CorParams():M(1),A(0),X(0){}
+	    double k(int Q, double pt) const{
+		return 1.0/(M + Q*A*pt + X/pt);
+	    }
+	};
 
 	struct RocOne{
 	    RocRes RR;
@@ -143,19 +150,25 @@ class RoccoR{
 	std::vector<int> nmem;
 	std::vector<int> tvar;
 	std::vector<std::vector<RocOne>> RC;
-	int etaBin(double eta) const;
-	int phiBin(double phi) const;
 	template <typename T> double error(T f) const;
 
+    protected:
+	int etaBin(double eta) const;
+	int phiBin(double phi) const;
+
     public:
+	enum TYPE{MC, DT};
+
 	RoccoR(); 
 	RoccoR(std::string filename); 
+
 	void init(std::string filename);
 	void reset();
-
+	bool empty() const {return RC.empty();} 
 	const RocRes& getRes(int s=0, int m=0) const {return RC[s][m].RR;}
 	double getM(int T, int H, int F, int s=0, int m=0) const{return RC[s][m].CP[T][H][F].M;}
 	double getA(int T, int H, int F, int s=0, int m=0) const{return RC[s][m].CP[T][H][F].A;}
+	double getX(int T, int H, int F, int s=0, int m=0) const{return RC[s][m].CP[T][H][F].X;}
 	double getK(int T, int H, int s=0, int m=0)        const{return RC[s][m].RR.resol[H].kRes[T];}
 	double kGenSmear(double pt, double eta, double v, double u, RocRes::TYPE TT=RocRes::Data, int s=0, int m=0) const;
 	double kScaleMC(int Q, double pt, double eta, double phi, int s=0, int m=0) const;
@@ -167,12 +180,6 @@ class RoccoR{
 	double kScaleDTerror(int Q, double pt, double eta, double phi) const;
 	double kSpreadMCerror(int Q, double pt, double eta, double phi, double gt) const;
 	double kSmearMCerror(int Q, double pt, double eta, double phi, int n, double u) const;
-
-	//old, should only be used with 2017v0
-	double kScaleFromGenMC(int Q, double pt, double eta, double phi, int n, double gt, double w, int s=0, int m=0) const; 
-	double kScaleAndSmearMC(int Q, double pt, double eta, double phi, int n, double u, double w, int s=0, int m=0) const;  
-	double kScaleFromGenMCerror(int Q, double pt, double eta, double phi, int n, double gt, double w) const; 
-	double kScaleAndSmearMCerror(int Q, double pt, double eta, double phi, int n, double u, double w) const;  
 };
 
 #endif
