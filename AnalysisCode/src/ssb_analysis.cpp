@@ -96,14 +96,14 @@ void ssb_analysis::Loop(char *logfile) {
     if (fProcessName.find("NNLO_inc") != std::string::npos && LHE_mass > 100.)
       continue;
 
-    if (fProcessName.find("NNLO") != std::string::npos) {
-      if (Gen_EventWeight < 0) globalWeight = -1;
-      else                     globalWeight = +1;
+    if (!fIsData) {
+      if (fProcessName.find("NNLO") != std::string::npos) {
+        if (Gen_EventWeight < 0) globalWeight = -1;
+        else                     globalWeight = +1;
 
-    } else {
-
-      globalWeight = Gen_EventWeight;
-
+      } else {
+        globalWeight = Gen_EventWeight;
+      }
     }
 
     // if (LHE_mass <= 10.) 
@@ -124,8 +124,8 @@ void ssb_analysis::Loop(char *logfile) {
     }
 
     double puReweightFactor = GetPUweight(PileUp_Count_Intime);
-    if (!fIsData)
-      globalWeight *= puReweightFactor;
+    // if (!fIsData)
+    //   globalWeight *= puReweightFactor;
 
 
 
@@ -133,19 +133,38 @@ void ssb_analysis::Loop(char *logfile) {
     /// start Main Loop Function and Cut ///
     ////////////////////////////////////////
 
-    int index_TrigIsoMu24 = 0;
-    int index_TrigIsoTkMu24 = 0;
+    bool isPassingTrigger = false;
+    if (fEra == "UL2016APV" || fEra == "UL2016") {
+      int index_TrigIsoMu24 = 0;
+      int index_TrigIsoTkMu24 = 0;
 
-    for (int i = 0; i < Trigger_Name->size(); i++) {
-      if (Trigger_Name->at(i).find("IsoMu24") != std::string::npos)
-        index_TrigIsoMu24 = i;
+      for (int i = 0; i < Trigger_Name->size(); i++) {
+        if (Trigger_Name->at(i).find("IsoMu24") != std::string::npos)
+          index_TrigIsoMu24 = i;
 
-      if (Trigger_Name->at(i).find("IsoTkMu24") != std::string::npos)
-        index_TrigIsoTkMu24 = i;
+        if (Trigger_Name->at(i).find("IsoTkMu24") != std::string::npos)
+          index_TrigIsoTkMu24 = i;
+      }
+      isPassingTrigger =  Trigger_isPass->at(index_TrigIsoMu24) || Trigger_isPass->at(index_TrigIsoMu24);
+    
+    } else if (fEra == "UL2017") {
+      int index_TrigIsoMu27 = 0;
+      for (int i = 0; i < Trigger_Name->size(); i++) {
+        if (Trigger_Name->at(i).find("IsoMu27") != std::string::npos)
+          index_TrigIsoMu27 = i;
+      }
+      isPassingTrigger =  Trigger_isPass->at(index_TrigIsoMu27);
+
+    } else {
+      int index_TrigIsoMu24 = 0;
+      for (int i = 0; i < Trigger_Name->size(); i++) {
+        if (Trigger_Name->at(i).find("IsoMu24") != std::string::npos)
+          index_TrigIsoMu24 = i;
+      }
+      isPassingTrigger =  Trigger_isPass->at(index_TrigIsoMu24);
     }
 
-    if (!(Trigger_isPass->at(index_TrigIsoMu24) ||
-          Trigger_isPass->at(index_TrigIsoMu24)))
+    if (!isPassingTrigger)
       continue;
 
     int index_HBHENoiseFilter = 0;
@@ -1277,25 +1296,6 @@ void ssb_analysis::DeclareHistos() {
       new TH1D(Form("h_dimuonRap_mt1BJ"), Form("dimuon_rap"), 60, -3., 3.);
   h_dimuonRap_mt1BJ->Sumw2();
 
-  // sample
-
-  // std::vector<float> xbins = { 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 64,
-  // 68, 72, 76, 81, 86,
-  //                              91, 96, 101, 106, 110, 115, 120, 126, 133,
-  //                              141, 150, 160, 171, 185, 200, 220, 243, 273,
-  //                              320, 380, 440, 510, 600, 700, 830, 1000, 1500,
-  //                              3000};
-
-  // qcut_pT           = new TH1D(Form("qcut_pT"),Form("Muon_pT"), 1000, 0,
-  // 1000); qcut_pT->Sumw2(); qcut_eta          = new
-  // TH1D(Form("qcut_eta"),Form("Muon_eta"), 60, -3., 3.); qcut_eta->Sumw2();
-  // qcut_phi          = new TH1D(Form("qcut_phi"),Form("Muon_phi"), 60,
-  // -3.141593, 3.141593); qcut_phi->Sumw2();
-
-  // muon_mass           = new TH1D(Form("muon_mass"),Form("Muon_mass"),
-  // 200, 41., 141.); muon_mass->Sumw2(); muon_mass_wide          = new
-  // TH1D(Form("muon_mass_wide"),Form("Muon_mass"), xbins.size()-1,
-  // &(xbins[0])); muon_mass_wide->Sumw2();
 }
 
 void ssb_analysis::End() {

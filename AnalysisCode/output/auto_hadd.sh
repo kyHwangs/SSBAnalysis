@@ -13,5 +13,9 @@ done
 
 
 rm ./ROOT/ROOT.root
-hadd ./ROOT/Data_Run2016_singleMu.root ./ROOT/Data_SingleMuon_*.root
+
+hadd ./ROOT/UL2016APV_Data.root ./ROOT/UL2016APV_Run2016*.root
+hadd ./ROOT/UL2016_Data.root ./ROOT/UL2016_Run2016*.root
+hadd ./ROOT/UL2017_Data.root ./ROOT/UL2017_Run2017*.root
+hadd ./ROOT/UL2018_Data.root ./ROOT/UL2018_Run2018*.root
 
