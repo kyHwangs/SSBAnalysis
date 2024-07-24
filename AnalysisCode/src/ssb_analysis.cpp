@@ -291,8 +291,13 @@ void ssb_analysis::Loop(char *logfile) {
       for (int i = 0; i < recoMuon.size(); i++) {
         if (fIsData) {
           recoMuon.at(i).v *= fRoccoR->kScaleDT(
-              recoMuon.at(i).charge, recoMuon.at(i).v.Pt(),
-              recoMuon.at(i).v.Eta(), recoMuon.at(i).v.Phi(), 0, 0);
+              recoMuon.at(i).charge, 
+              recoMuon.at(i).v.Pt(),
+              recoMuon.at(i).v.Eta(), 
+              recoMuon.at(i).v.Phi(), 
+              5, 
+              0
+            );
         } else {
 
           double drmin = 999.;
@@ -309,17 +314,26 @@ void ssb_analysis::Loop(char *logfile) {
           }
 
           if (match) {
-            recoMuon.at(i).v *= fRoccoR->kScaleFromGenMC(
-                recoMuon.at(i).charge, recoMuon.at(i).v.Pt(),
-                recoMuon.at(i).v.Eta(), recoMuon.at(i).v.Phi(),
-                Muon_trackerLayers->at(i), genStdMuon.at(genMuonIdx).Pt(),
-                Muon_rand2->at(i), 0, 0);
+            recoMuon.at(i).v *= fRoccoR->kSpreadMC(
+                recoMuon.at(i).charge, 
+                recoMuon.at(i).v.Pt(),
+                recoMuon.at(i).v.Eta(), 
+                recoMuon.at(i).v.Phi(),
+                genStdMuon.at(genMuonIdx).Pt(),
+                5, 
+                0
+              );
           } else {
-            recoMuon.at(i).v *= fRoccoR->kScaleAndSmearMC(
-                recoMuon.at(i).charge, recoMuon.at(i).v.Pt(),
-                recoMuon.at(i).v.Eta(), recoMuon.at(i).v.Phi(),
-                Muon_trackerLayers->at(i), Muon_rand1->at(i), Muon_rand2->at(i),
-                0, 0);
+            recoMuon.at(i).v *= fRoccoR->kSmearMC(
+                recoMuon.at(i).charge, 
+                recoMuon.at(i).v.Pt(),
+                recoMuon.at(i).v.Eta(), 
+                recoMuon.at(i).v.Phi(),
+                Muon_trackerLayers->at(i), 
+                Muon_rand1->at(i), 
+                5, 
+                0
+              );
           }
         }
       }
