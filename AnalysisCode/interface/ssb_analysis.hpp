@@ -71,6 +71,8 @@ public:
   double GetPUweight(int npv) { return fPuReweighting->weight(npv); }
   double GetPUweight(float npv) { return fPuReweighting->weight(npv); }
 
+  double GetEventTriggerEfficiencyScaleFactor(double pt_1, double eta_1, double pt_2, double eta_2);
+
   // double GetIdisoSF(double pT, double eta);
   // double GetTriggerSF(double pT1, double eta1, double pt2, double eta2);
 
@@ -258,9 +260,10 @@ private:
   // vector for ChargeMisId
   edm::LumiReWeighting *fPuReweighting;
   RoccoR *fRoccoR;
-  EffTable fIDISO_SF;
-  EffTable fTRIG_SF;
-  EffTable fTracking_SF;
+  EffTable fID_SF;
+  EffTable fISO_SF;
+  EffTable fTRIG_DataEff;
+  EffTable fTRIG_MCEff;
 
 public:
   // declare histograms
@@ -505,12 +508,22 @@ ssb_analysis::ssb_analysis(TTree *tree,
 
   // initializing HERE !
 
+  // EffTable fID_SF;
+  // EffTable fISO_SF;
+  // EffTable fTRIG_DataEff;
+  // EffTable fTRIG_MCEff;
+
   if (fEra == "UL2016APV") {
     fRoccoR = new RoccoR("./RoccoR/RoccoR2016aUL.txt");
     fPuReweighting = new edm::LumiReWeighting("./pileuInfo/MC_2016.root", "./pileuInfo/PileupHistogram-goldenJSON-13tev-2016-preVFP-69200ub-99bins.root", "pileup", "pileup");
     std::cout << "MC PU : ./pileuInfo/MC_2016.root" << std::endl;
     std::cout << "DATA PU : ./pileuInfo/PileupHistogram-goldenJSON-13tev-2016-preVFP-69200ub-99bins.root" << std::endl;
     std::cout << "Roccor : ./RoccoR/RoccoR2016aUL.txt" << std::endl;
+
+    fID_SF        = EffTable("./lepEff/eff_240728/Run2016_UL_HIPM_ID.txt");
+    fISO_SF       = EffTable("./lepEff/eff_240728/Run2016_UL_HIPM_ISO.txt");
+    fTRIG_DataEff = EffTable("./lepEff/eff_240728/Run2016_UL_HIPM_TRIG_DATAeff.txt");
+    fTRIG_MCEff   = EffTable("./lepEff/eff_240728/Run2016_UL_HIPM_TRIG_MCeff.txt");
 
   } else if (fEra == "UL2016") {
     fRoccoR = new RoccoR("./RoccoR/RoccoR2016bUL.txt");
@@ -519,6 +532,11 @@ ssb_analysis::ssb_analysis(TTree *tree,
     std::cout << "DATA PU : ./pileuInfo/PileupHistogram-goldenJSON-13tev-2016-postVFP-69200ub-99bins.root" << std::endl;  
     std::cout << "Roccor : ./RoccoR/RoccoR2016bUL.txt" << std::endl;
 
+    fID_SF        = EffTable("./lepEff/eff_240728/Run2016_UL_ID.txt");
+    fISO_SF       = EffTable("./lepEff/eff_240728/Run2016_UL_ISO.txt");
+    fTRIG_DataEff = EffTable("./lepEff/eff_240728/Run2016_UL_TRIG_DATAeff.txt");
+    fTRIG_MCEff   = EffTable("./lepEff/eff_240728/Run2016_UL_TRIG_MCeff.txt");
+
   } else if (fEra == "UL2017") {
     fRoccoR = new RoccoR("./RoccoR/RoccoR2017UL.txt");    
     fPuReweighting = new edm::LumiReWeighting("./pileuInfo/MC_2017.root", "./pileuInfo/PileupHistogram-goldenJSON-13tev-2017-69200ub-99bins.root", "pileup", "pileup");
@@ -526,13 +544,35 @@ ssb_analysis::ssb_analysis(TTree *tree,
     std::cout << "DATA PU : ./pileuInfo/PileupHistogram-goldenJSON-13tev-2017-69200ub-99bins.root" << std::endl;  
     std::cout << "Roccor : ./RoccoR/RoccoR2017UL.txt" << std::endl;
 
+    fID_SF        = EffTable("./lepEff/eff_240728/Run2017_UL_ID.txt");
+    fISO_SF       = EffTable("./lepEff/eff_240728/Run2017_UL_ISO.txt");
+    fTRIG_DataEff = EffTable("./lepEff/eff_240728/Run2017_UL_TRIG_DATAeff.txt");
+    fTRIG_MCEff   = EffTable("./lepEff/eff_240728/Run2017_UL_TRIG_MCeff.txt");
+
   } else {
     fRoccoR = new RoccoR("./RoccoR/RoccoR2018UL.txt");
     fPuReweighting = new edm::LumiReWeighting("./pileuInfo/MC_2018.root", "./pileuInfo/PileupHistogram-goldenJSON-13tev-2018-69200ub-99bins.root", "pileup", "pileup");
     std::cout << "MC PU : ./pileuInfo/MC_2018.root" << std::endl;
     std::cout << "DATA PU : ./pileuInfo/PileupHistogram-goldenJSON-13tev-2018-69200ub-99bins.root" << std::endl;  
     std::cout << "Roccor : ./RoccoR/RoccoR2018UL.txt" << std::endl;
+  
+    fID_SF        = EffTable("./lepEff/eff_240728/Run2018_UL_ID.txt");
+    fISO_SF       = EffTable("./lepEff/eff_240728/Run2018_UL_ISO.txt");
+    fTRIG_DataEff = EffTable("./lepEff/eff_240728/Run2018_UL_TRIG_DATAeff.txt");
+    fTRIG_MCEff   = EffTable("./lepEff/eff_240728/Run2018_UL_TRIG_MCeff.txt");
   }  
+}
+
+double ssb_analysis::GetEventTriggerEfficiencyScaleFactor(double pt_1, double eta_1, double pt_2, double eta_2) {
+
+  double mu_1_data = fTRIG_DataEff.getEfficiency(pt_1, eta_1);
+  double mu_2_data = fTRIG_DataEff.getEfficiency(pt_2, eta_2);
+
+  double mu_1_mc = fTRIG_MCEff.getEfficiency(pt_1, eta_1);
+  double mu_2_mc = fTRIG_MCEff.getEfficiency(pt_2, eta_2);
+
+  return ( 1 - (1 - mu_1_data) * (1 - mu_2_data) ) / ( 1 - (1 - mu_1_mc) * (1 - mu_2_mc) );
+
 }
 
 double ssb_analysis::GetNormalization() {

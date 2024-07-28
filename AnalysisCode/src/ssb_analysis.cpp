@@ -370,6 +370,8 @@ void ssb_analysis::Loop(char *logfile) {
     TLorentzVector leadingMuon = setMuonsPassingCut.at(0).v;
     TLorentzVector subleadingMuon = setMuonsPassingCut.at(idx_subleading).v;
 
+    TLorentzVector row_leadingMuon = setMuonsPassingCut.at(0)._v;
+    TLorentzVector row_subleadingMuon = setMuonsPassingCut.at(idx_subleading)._v;
 
     if (!((leadingMuon + subleadingMuon).M() > fMassCut))
       continue;
@@ -377,36 +379,51 @@ void ssb_analysis::Loop(char *logfile) {
     if (!fIsData) {
 
       if (fIDISO_enalbed) {
-        globalWeight *= fTracking_SF.getEfficiency(setMuonsPassingCut.at(0)._v.Pt(), setMuonsPassingCut.at(0)._v.Eta());
-        globalWeight *= fTracking_SF.getEfficiency(setMuonsPassingCut.at(idx_subleading)._v.Pt(), setMuonsPassingCut.at(idx_subleading)._v.Eta());
+        globalWeight *= fID_SF.getEfficiency(row_leadingMuon.Pt(), std::abs(row_leadingMuon.Eta()));
+        globalWeight *= fID_SF.getEfficiency(row_subleadingMuon.Pt(), std::abs(row_subleadingMuon.Eta()));
 
-        globalWeight *= fIDISO_SF.getEfficiency(setMuonsPassingCut.at(0)._v.Pt(), setMuonsPassingCut.at(0)._v.Eta());
-        globalWeight *= fIDISO_SF.getEfficiency(setMuonsPassingCut.at(idx_subleading)._v.Pt(), setMuonsPassingCut.at(idx_subleading)._v.Eta());
+        globalWeight *= fISO_SF.getEfficiency(row_leadingMuon.Pt(), std::abs(row_leadingMuon.Eta()));
+        globalWeight *= fISO_SF.getEfficiency(row_subleadingMuon.Pt(), std::abs(row_subleadingMuon.Eta()));
 
-        // std::cout << normSF << " "
-        //           << puReweightFactor << " "
-        //           << fIDISO_SF.getEfficiency(leadingMuon.Pt(),
-        //           leadingMuon.Eta()) << " "
-        //           << fIDISO_SF.getEfficiency(subleadingMuon.Pt(),
-        //           subleadingMuon.Eta()) << " "
-        //           << globalWeight << " "
+        // std::cout << row_leadingMuon.Pt() << " " 
+        //           << row_leadingMuon.Eta() << " " 
+        //           << fID_SF.getEfficiency(row_leadingMuon.Pt(), std::abs(row_leadingMuon.Eta())) << " " 
+        //           << fISO_SF.getEfficiency(row_leadingMuon.Pt(), std::abs(row_leadingMuon.Eta())) 
         //           << std::endl;
+
+        // std::cout << row_subleadingMuon.Pt() << " " 
+        //           << row_subleadingMuon.Eta() << " " 
+        //           << fID_SF.getEfficiency(row_subleadingMuon.Pt(), std::abs(row_subleadingMuon.Eta())) << " " 
+        //           << fISO_SF.getEfficiency(row_subleadingMuon.Pt(), std::abs(row_subleadingMuon.Eta())) 
+        //           << std::endl;
+
       }
 
       if (fTRIGG_enalbed) {
-        globalWeight *= fTRIG_SF.getTriggerEfficiency(setMuonsPassingCut.at(0)._v.Pt(), setMuonsPassingCut.at(0)._v.Eta(), setMuonsPassingCut.at(idx_subleading)._v.Pt(), setMuonsPassingCut.at(idx_subleading)._v.Eta());
+        globalWeight *= GetEventTriggerEfficiencyScaleFactor(
+                          row_leadingMuon.Pt(), std::abs(row_leadingMuon.Eta()), 
+                          row_subleadingMuon.Pt(), std::abs(row_subleadingMuon.Eta())
+                          );
 
-        // std::cout << normSF << " "
-        //           << puReweightFactor << " "
-        //           << fIDISO_SF.getEfficiency(leadingMuon.Pt(),
-        //           leadingMuon.Eta()) << " "
-        //           << fIDISO_SF.getEfficiency(subleadingMuon.Pt(),
-        //           subleadingMuon.Eta()) << " "
-        //           << fTRIG_SF.getTriggerEfficiency(leadingMuon.Pt(),
-        //           leadingMuon.Eta(), subleadingMuon.Pt(),
-        //           subleadingMuon.Eta()) << " "
-        //           << globalWeight << " "
+
+        // std::cout << row_leadingMuon.Pt() << " "
+        //           << row_leadingMuon.Eta() << " "
+        //           << row_subleadingMuon.Pt() << " "
+        //           << row_subleadingMuon.Eta() << " "
+        //           << GetEventTriggerEfficiencyScaleFactor(
+        //                     row_leadingMuon.Pt(), 
+        //                     std::abs(row_leadingMuon.Eta()), 
+        //                     row_subleadingMuon.Pt(), 
+        //                     std::abs(row_subleadingMuon.Eta())
+        //               )
         //           << std::endl;
+
+        // std::cout << globalWeight << std::endl;
+        
+        // std::cout << " " << std::endl;
+
+
+
       }
     }
 

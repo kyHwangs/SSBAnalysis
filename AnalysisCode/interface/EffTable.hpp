@@ -15,20 +15,12 @@ class EffTable
 
 struct record
 {
-    double etaLow, etaHi, ptLow, ptHi, effi, effiPre, effiPost;
+    double ptLow, ptHi, etaLow, etaHi, effi, effSystDown, effSystUp;
 
     bool belongTo(double, double) const;
 };
 
-struct record_11
-{
-    double mu1etaLow, mu1etaHi, mu1ptLow, mu1ptHi, mu2etaLow, mu2etaHi, mu2ptLow, mu2ptHi, effi, effiPre, effiPost;
-
-    bool belongTo_forTrigger(double, double, double, double) const;
-};
-
 std::vector<record> _recd;
-std::vector<record_11> _recd_11;
 
 public:
 
@@ -41,7 +33,6 @@ public:
 	};
 
 	double getEfficiency(double pt, double eta) const;
-	double getTriggerEfficiency(double mu1pt, double mu1eta, double mu2pt, double mu2eta) const;
 
 private:
 
