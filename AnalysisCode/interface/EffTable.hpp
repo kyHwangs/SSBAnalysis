@@ -17,7 +17,7 @@ struct record
 {
     double ptLow, ptHi, etaLow, etaHi, effi, effSystDown, effSystUp;
 
-    bool belongTo(double, double) const;
+    bool belongTo(double, double);
 };
 
 std::vector<record> _recd;
@@ -27,12 +27,13 @@ public:
 	explicit EffTable() = default;
 
 	explicit EffTable(const std::string &fFilename_) 
+	// EffTable(const std::string &fFilename_) 
 	:fFilename(fFilename_) {
 		std::cout << "loading efficiency SF table of " << fFilename_ << std::endl;
 		init();
 	};
 
-	double getEfficiency(double pt, double eta) const;
+	double getEfficiency(double pt, double eta);
 
 private:
 

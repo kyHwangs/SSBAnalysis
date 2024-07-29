@@ -39,13 +39,13 @@ void EffTable::init() {
 
 }
 
-bool EffTable::record::belongTo(double pt, double eta) const
+bool EffTable::record::belongTo(double pt, double eta)
 {
     return (pt < ptHi && pt >= ptLow) && (eta < etaHi && eta >= etaLow);
 }
 
 
-double EffTable::getEfficiency(double pt, double eta) const
+double EffTable::getEfficiency(double pt, double eta)
 {
   double hiPtBin = 0;
   

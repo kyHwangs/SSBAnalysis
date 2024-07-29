@@ -41,7 +41,7 @@ void ssb_analysis::Loop(char *logfile) {
   /// start event loop ///
   ////////////////////////
 
-  double globalWeight = 1;
+  Double_t globalWeight = 1;
   double normSF = 1;
 
   // if (!fIsData) {
@@ -396,14 +396,52 @@ void ssb_analysis::Loop(char *logfile) {
         //           << fID_SF.getEfficiency(row_subleadingMuon.Pt(), std::abs(row_subleadingMuon.Eta())) << " " 
         //           << fISO_SF.getEfficiency(row_subleadingMuon.Pt(), std::abs(row_subleadingMuon.Eta())) 
         //           << std::endl;
+        // std::cout << "AFTER IDISO global wei: " << globalWeight << std::endl;
 
       }
 
+      // std::cout << typeid(globalWeight).name() << std::endl;
+
       if (fTRIGG_enalbed) {
-        globalWeight *= GetEventTriggerEfficiencyScaleFactor(
-                          row_leadingMuon.Pt(), std::abs(row_leadingMuon.Eta()), 
-                          row_subleadingMuon.Pt(), std::abs(row_subleadingMuon.Eta())
-                          );
+        // globalWeight *= GetEventTriggerEfficiencyScaleFactor(
+        //                   row_leadingMuon.Pt(), std::abs(row_leadingMuon.Eta()), 
+        //                   row_subleadingMuon.Pt(), std::abs(row_subleadingMuon.Eta())
+        //                   );
+
+        double mu_1_data = fTRIG_DataEff.getEfficiency(row_leadingMuon.Pt(), std::abs(row_leadingMuon.Eta()));
+        double mu_2_data = fTRIG_DataEff.getEfficiency(row_subleadingMuon.Pt(), std::abs(row_subleadingMuon.Eta()));
+
+        double mu_1_mc = fTRIG_MCEff.getEfficiency(row_leadingMuon.Pt(), std::abs(row_leadingMuon.Eta()));
+        double mu_2_mc = fTRIG_MCEff.getEfficiency(row_subleadingMuon.Pt(), std::abs(row_subleadingMuon.Eta()));
+
+        double data_tot = 1. - (1. - mu_1_data) * (1. - mu_2_data);
+        double mc_tot = 1. - (1. - mu_1_mc) * (1. - mu_2_mc);
+
+
+        double eventTriggerEffSF = 0.;
+        if ( !(data_tot == 0 || mc_tot == 0) )
+          eventTriggerEffSF = (1. * data_tot) / mc_tot;
+
+        globalWeight *= eventTriggerEffSF;
+
+
+        // std::cout << row_leadingMuon.Pt() << " "
+        //           << row_leadingMuon.Eta() << " "
+        //           << fTRIG_DataEff.getEfficiency(row_leadingMuon.Pt(), std::abs(row_leadingMuon.Eta())) << " "
+        //           << fTRIG_MCEff.getEfficiency(row_leadingMuon.Pt(), std::abs(row_leadingMuon.Eta())) << " "
+        //           << row_subleadingMuon.Pt() << " "
+        //           << row_subleadingMuon.Eta() << " "
+        //           << fTRIG_DataEff.getEfficiency(row_subleadingMuon.Pt(), std::abs(row_subleadingMuon.Eta())) << " "
+        //           << fTRIG_MCEff.getEfficiency(row_subleadingMuon.Pt(), std::abs(row_subleadingMuon.Eta())) << " "
+        //           << eventTriggerEffSF << " "
+        //           << globalWeight << std::endl;
+
+
+
+        // std::cout << typeid(globalWeight).name() << std::endl;
+
+
+        // std::cout << "AFTER TRIGG global wei: " << globalWeight << std::endl;
 
 
         // std::cout << row_leadingMuon.Pt() << " "
@@ -487,6 +525,8 @@ void ssb_analysis::Loop(char *logfile) {
 
     int nJet_selected = selStdJet.size();
     int nBJet_selected = selStdBJet.size();
+
+    // std::cout << "Total global wei: " << globalWeight << std::endl;
 
     for (int i = 0; i < nJet_selected; i++) {
       FillHisto(h_JetPt, selStdJet.at(i).Pt(), globalWeight);
@@ -1124,44 +1164,19 @@ void ssb_analysis::DeclareHistos() {
       new TH1D(Form("h_dimuonRap_0J"), Form("dimuon_rap"), 60, -3., 3.);
   h_dimuonRap_0J->Sumw2();
 
-  h_LeadingMuonPt_1J =
-      new TH1D(Form("h_LeadingMuonPt_1J"), Form("Muon_pT"), 1000, 0, 1000);
-  h_LeadingMuonPt_1J->Sumw2();
-  h_LeadingMuonEta_1J =
-      new TH1D(Form("h_LeadingMuonEta_1J"), Form("Muon_Eta"), 60, -3., 3.);
-  h_LeadingMuonEta_1J->Sumw2();
-  h_LeadingMuonPhi_1J = new TH1D(Form("h_LeadingMuonPhi_1J"), Form("Muon_Phi"),
-                                 60, -3.141594, 3.141594);
-  h_LeadingMuonPhi_1J->Sumw2();
-  h_SubleadingMuonPt_1J =
-      new TH1D(Form("h_SubleadingMuonPt_1J"), Form("Muon_pT"), 1000, 0, 1000);
-  h_SubleadingMuonPt_1J->Sumw2();
-  h_SubleadingMuonEta_1J =
-      new TH1D(Form("h_SubleadingMuonEta_1J"), Form("Muon_Eta"), 60, -3., 3.);
-  h_SubleadingMuonEta_1J->Sumw2();
-  h_SubleadingMuonPhi_1J = new TH1D(Form("h_SubleadingMuonPhi_1J"),
-                                    Form("Muon_Phi"), 60, -3.141594, 3.141594);
-  h_SubleadingMuonPhi_1J->Sumw2();
-  h_MuonPt_1J = new TH1D(Form("h_MuonPt_1J"), Form("Muon_pT"), 1000, 0, 1000);
-  h_MuonPt_1J->Sumw2();
-  h_MuonEta_1J = new TH1D(Form("h_MuonEta_1J"), Form("Muon_Eta"), 60, -3., 3.);
-  h_MuonEta_1J->Sumw2();
-  h_MuonPhi_1J =
-      new TH1D(Form("h_MuonPhi_1J"), Form("Muon_Phi"), 60, -3.141594, 3.141594);
-  h_MuonPhi_1J->Sumw2();
-  h_dimuonMass_1J =
-      new TH1D(Form("h_dimuonMass_1J"), Form("inv_Mass"), 100, 41., 141.);
-  h_dimuonMass_1J->Sumw2();
-  h_dimuonMass_wide_1J =
-      new TH1D(Form("h_dimuonMass_wide_1J"), Form("inv_Mass"), xbins.size() - 1,
-               &(xbins[0]));
-  h_dimuonMass_wide_1J->Sumw2();
-  h_dimuonPt_1J =
-      new TH1D(Form("h_dimuonPt_1J"), Form("dimuon_pT"), 1000, 0., 1000.);
-  h_dimuonPt_1J->Sumw2();
-  h_dimuonRap_1J =
-      new TH1D(Form("h_dimuonRap_1J"), Form("dimuon_rap"), 60, -3., 3.);
-  h_dimuonRap_1J->Sumw2();
+  h_LeadingMuonPt_1J = new TH1D(Form("h_LeadingMuonPt_1J"), Form("Muon_pT"), 1000, 0, 1000); h_LeadingMuonPt_1J->Sumw2();
+  h_LeadingMuonEta_1J = new TH1D(Form("h_LeadingMuonEta_1J"), Form("Muon_Eta"), 60, -3., 3.); h_LeadingMuonEta_1J->Sumw2();
+  h_LeadingMuonPhi_1J = new TH1D(Form("h_LeadingMuonPhi_1J"), Form("Muon_Phi"), 60, -3.141594, 3.141594); h_LeadingMuonPhi_1J->Sumw2();
+  h_SubleadingMuonPt_1J = new TH1D(Form("h_SubleadingMuonPt_1J"), Form("Muon_pT"), 1000, 0, 1000); h_SubleadingMuonPt_1J->Sumw2();
+  h_SubleadingMuonEta_1J = new TH1D(Form("h_SubleadingMuonEta_1J"), Form("Muon_Eta"), 60, -3., 3.); h_SubleadingMuonEta_1J->Sumw2();
+  h_SubleadingMuonPhi_1J = new TH1D(Form("h_SubleadingMuonPhi_1J"), Form("Muon_Phi"), 60, -3.141594, 3.141594); h_SubleadingMuonPhi_1J->Sumw2();
+  h_MuonPt_1J = new TH1D(Form("h_MuonPt_1J"), Form("Muon_pT"), 1000, 0, 1000); h_MuonPt_1J->Sumw2();
+  h_MuonEta_1J = new TH1D(Form("h_MuonEta_1J"), Form("Muon_Eta"), 60, -3., 3.); h_MuonEta_1J->Sumw2();
+  h_MuonPhi_1J = new TH1D(Form("h_MuonPhi_1J"), Form("Muon_Phi"), 60, -3.141594, 3.141594); h_MuonPhi_1J->Sumw2();
+  h_dimuonMass_1J = new TH1D(Form("h_dimuonMass_1J"), Form("inv_Mass"), 100, 41., 141.); h_dimuonMass_1J->Sumw2();
+  h_dimuonMass_wide_1J = new TH1D(Form("h_dimuonMass_wide_1J"), Form("inv_Mass"), xbins.size() - 1, &(xbins[0])); h_dimuonMass_wide_1J->Sumw2();
+  h_dimuonPt_1J = new TH1D(Form("h_dimuonPt_1J"), Form("dimuon_pT"), 1000, 0., 1000.); h_dimuonPt_1J->Sumw2();
+  h_dimuonRap_1J = new TH1D(Form("h_dimuonRap_1J"), Form("dimuon_rap"), 60, -3., 3.); h_dimuonRap_1J->Sumw2();
 
   h_LeadingMuonPt_mt1J =
       new TH1D(Form("h_LeadingMuonPt_mt1J"), Form("Muon_pT"), 1000, 0, 1000);

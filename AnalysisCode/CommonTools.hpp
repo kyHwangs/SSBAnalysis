@@ -54,7 +54,8 @@ class read_my_params
       bool _found_one;
 };
 
-void FillHisto(TH1 *hist, Double_t val, Double_t weight=1.0);
-void FillHisto(TH2 *hist, Double_t valx, Double_t valy, Double_t weight=1.0);
-void FillHisto(TH3 *hist, Double_t valx, Double_t valy, Double_t valz, Double_t weight=1.0);
+void FillHisto(TH1 *hist, Double_t val, Double_t weight = 1.0);
+void FillHisto(TH1D* hist, Double_t val, Double_t weight);
+void FillHisto(TH2 *hist, Double_t valx, Double_t valy, Double_t weight = 1.0);
+void FillHisto(TH3 *hist, Double_t valx, Double_t valy, Double_t valz, Double_t weight = 1.0);
 

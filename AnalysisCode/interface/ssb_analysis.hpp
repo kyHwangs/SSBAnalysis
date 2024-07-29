@@ -71,7 +71,7 @@ public:
   double GetPUweight(int npv) { return fPuReweighting->weight(npv); }
   double GetPUweight(float npv) { return fPuReweighting->weight(npv); }
 
-  double GetEventTriggerEfficiencyScaleFactor(double pt_1, double eta_1, double pt_2, double eta_2);
+  // double GetEventTriggerEfficiencyScaleFactor(double pt_1, double eta_1, double pt_2, double eta_2) const;
 
   // double GetIdisoSF(double pT, double eta);
   // double GetTriggerSF(double pT1, double eta1, double pt2, double eta2);
@@ -563,17 +563,17 @@ ssb_analysis::ssb_analysis(TTree *tree,
   }  
 }
 
-double ssb_analysis::GetEventTriggerEfficiencyScaleFactor(double pt_1, double eta_1, double pt_2, double eta_2) {
+// double ssb_analysis::GetEventTriggerEfficiencyScaleFactor(double pt_1, double eta_1, double pt_2, double eta_2) const {
 
-  double mu_1_data = fTRIG_DataEff.getEfficiency(pt_1, eta_1);
-  double mu_2_data = fTRIG_DataEff.getEfficiency(pt_2, eta_2);
+//   double mu_1_data = fTRIG_DataEff.getEfficiency(pt_1, eta_1);
+//   double mu_2_data = fTRIG_DataEff.getEfficiency(pt_2, eta_2);
 
-  double mu_1_mc = fTRIG_MCEff.getEfficiency(pt_1, eta_1);
-  double mu_2_mc = fTRIG_MCEff.getEfficiency(pt_2, eta_2);
+//   double mu_1_mc = fTRIG_MCEff.getEfficiency(pt_1, eta_1);
+//   double mu_2_mc = fTRIG_MCEff.getEfficiency(pt_2, eta_2);
 
-  return ( 1 - (1 - mu_1_data) * (1 - mu_2_data) ) / ( 1 - (1 - mu_1_mc) * (1 - mu_2_mc) );
+//   return ( 1 - (1 - mu_1_data) * (1 - mu_2_data) ) / ( 1 - (1 - mu_1_mc) * (1 - mu_2_mc) );
 
-}
+// }
 
 double ssb_analysis::GetNormalization() {
 

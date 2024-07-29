@@ -1,18 +1,50 @@
 #include "CommonTools.hpp"
-#include<stdlib.h>
+#include <stdlib.h>
 
 void FillHisto(TH1 *hist, Double_t val, Double_t weight)
 {
-   Int_t nbins=hist->GetNbinsX();
-   Double_t minval=hist->GetXaxis()->GetBinCenter(1);  
-   Double_t maxval=hist->GetXaxis()->GetBinCenter(nbins);
+   Int_t nbins = hist->GetNbinsX();
+   Double_t minval = hist->GetXaxis()->GetBinLowEdge(1);  
+   Double_t maxval = hist->GetXaxis()->GetBinLowEdge(nbins) + hist->GetXaxis()->GetBinWidth(nbins);
 
-   if(val< minval)    
-      hist->Fill(minval, weight);  
-   else if(val>maxval)    
-      hist->Fill(maxval, weight);
-   else    
+   Double_t mincen = hist->GetXaxis()->GetBinCenter(1); 
+   Double_t maxcen = hist->GetXaxis()->GetBinCenter(nbins); 
+
+   // std::cout << hist->GetName() << " " << val << " " << weight << " " << minval << " " << maxval << std::endl;
+
+   if (val < minval) {
+      hist->Fill(mincen, weight);
+      // std::cout << "Underflow: " << hist->GetEntries() << " " << hist->GetMean() << std::endl;
+   } else if (val > maxval) {
+      hist->Fill(maxcen, weight);
+      // std::cout << "Overflow: " << hist->GetEntries() << " " << hist->GetMean() << std::endl;
+   } else {
       hist->Fill(val, weight);
+      // std::cout << "NORMAL: " << hist->GetEntries() << " " << hist->GetMean() << std::endl;
+   }
+}
+
+void FillHisto(TH1D* hist, Double_t val, Double_t weight)
+{
+   Int_t nbins = hist->GetNbinsX();
+   Double_t minval = hist->GetXaxis()->GetBinLowEdge(1);  
+   Double_t maxval = hist->GetXaxis()->GetBinLowEdge(nbins) + hist->GetXaxis()->GetBinWidth(nbins);
+
+   Double_t mincen = hist->GetXaxis()->GetBinCenter(1); 
+   Double_t maxcen = hist->GetXaxis()->GetBinCenter(nbins); 
+
+   // std::cout << hist->GetName() << " " << val << " " << weight << " " << minval << " " << maxval << std::endl;
+
+   if (val < minval) {
+      hist->Fill(mincen, weight);
+      // std::cout << "Underflow: " << hist->GetEntries() << " " << hist->GetMean() << std::endl;
+   } else if (val > maxval) {
+      hist->Fill(maxcen, weight);
+      // std::cout << "Overflow: " << hist->GetEntries() << " " << hist->GetMean() << std::endl;
+   } else {
+      hist->Fill(val, weight);
+      // std::cout << "NORMAL: " << hist->GetEntries() << " " << hist->GetMean() << std::endl;
+   }
 }
 
 void FillHisto(TH2 *hist, Double_t valx, Double_t valy, Double_t weight)
