@@ -255,6 +255,8 @@ private:
   bool fIDISO_enalbed;
   bool fTRIGG_enalbed;
 
+  double fLeadingMuPt;
+  double fSubLeadingMuPt;
   float fMassCut;
 
   // vector for ChargeMisId
@@ -520,6 +522,8 @@ ssb_analysis::ssb_analysis(TTree *tree,
     std::cout << "DATA PU : ./pileuInfo/PileupHistogram-goldenJSON-13tev-2016-preVFP-69200ub-99bins.root" << std::endl;
     std::cout << "Roccor : ./RoccoR/RoccoR2016aUL.txt" << std::endl;
 
+    fLeadingMuPt = 26.;
+    fSubLeadingMuPt = 10.;
     fID_SF        = EffTable("./lepEff/eff_240728/Run2016_UL_HIPM_ID.txt");
     fISO_SF       = EffTable("./lepEff/eff_240728/Run2016_UL_HIPM_ISO.txt");
     fTRIG_DataEff = EffTable("./lepEff/eff_240728/Run2016_UL_HIPM_TRIG_DATAeff.txt");
@@ -532,6 +536,8 @@ ssb_analysis::ssb_analysis(TTree *tree,
     std::cout << "DATA PU : ./pileuInfo/PileupHistogram-goldenJSON-13tev-2016-postVFP-69200ub-99bins.root" << std::endl;  
     std::cout << "Roccor : ./RoccoR/RoccoR2016bUL.txt" << std::endl;
 
+    fLeadingMuPt = 26.;
+    fSubLeadingMuPt = 10.;
     fID_SF        = EffTable("./lepEff/eff_240728/Run2016_UL_ID.txt");
     fISO_SF       = EffTable("./lepEff/eff_240728/Run2016_UL_ISO.txt");
     fTRIG_DataEff = EffTable("./lepEff/eff_240728/Run2016_UL_TRIG_DATAeff.txt");
@@ -544,6 +550,8 @@ ssb_analysis::ssb_analysis(TTree *tree,
     std::cout << "DATA PU : ./pileuInfo/PileupHistogram-goldenJSON-13tev-2017-69200ub-99bins.root" << std::endl;  
     std::cout << "Roccor : ./RoccoR/RoccoR2017UL.txt" << std::endl;
 
+    fLeadingMuPt = 29.;
+    fSubLeadingMuPt = 10.;
     fID_SF        = EffTable("./lepEff/eff_240728/Run2017_UL_ID.txt");
     fISO_SF       = EffTable("./lepEff/eff_240728/Run2017_UL_ISO.txt");
     fTRIG_DataEff = EffTable("./lepEff/eff_240728/Run2017_UL_TRIG_DATAeff.txt");
@@ -556,6 +564,8 @@ ssb_analysis::ssb_analysis(TTree *tree,
     std::cout << "DATA PU : ./pileuInfo/PileupHistogram-goldenJSON-13tev-2018-69200ub-99bins.root" << std::endl;  
     std::cout << "Roccor : ./RoccoR/RoccoR2018UL.txt" << std::endl;
   
+    fLeadingMuPt = 26.;
+    fSubLeadingMuPt = 10.;
     fID_SF        = EffTable("./lepEff/eff_240728/Run2018_UL_ID.txt");
     fISO_SF       = EffTable("./lepEff/eff_240728/Run2018_UL_ISO.txt");
     fTRIG_DataEff = EffTable("./lepEff/eff_240728/Run2018_UL_TRIG_DATAeff.txt");

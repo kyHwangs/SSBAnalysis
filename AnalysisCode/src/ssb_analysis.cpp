@@ -353,7 +353,8 @@ void ssb_analysis::Loop(char *logfile) {
     if (setMuonsPassingCut.size() < 2)
       continue;
 
-    if (!(setMuonsPassingCut.at(0).v.Pt() > 25.))
+    // if (!(setMuonsPassingCut.at(0).v.Pt() > 25.))
+    if (!(setMuonsPassingCut.at(0).v.Pt() > fLeadingMuPt))
       continue;
 
     int idx_subleading = -1;
